@@ -17,7 +17,7 @@ namespace SamplesToTextsMatcher.Entities
         /// Non-interpreted expression as string.
         /// </summary>
         /// <value>The raw expression.</value>
-        public string RawExpression { get; set; }
+        public string Raw { get; set; }
 
         public abstract void Interpret(Context context);
     }
