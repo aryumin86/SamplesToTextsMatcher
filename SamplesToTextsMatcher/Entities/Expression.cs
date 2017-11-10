@@ -13,6 +13,12 @@ namespace SamplesToTextsMatcher.Entities
         /// <value>The interpretation result.</value>
         public bool? Result { get; set; }
 
+        /// <summary>
+        /// Non-interpreted expression as string.
+        /// </summary>
+        /// <value>The raw expression.</value>
+        public string RawExpression { get; set; }
+
         public abstract void Interpret(Context context);
     }
 }
