@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
     <Folder Include="Enums\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Entities\NonTerminalExpression.cs" />
   </ItemGroup>
 </Project>

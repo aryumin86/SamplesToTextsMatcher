@@ -1,11 +1,8 @@
 ﻿using System;
 namespace SamplesToTextsMatcher.Entities
 {
-    public class NonTerminalExpression : Expression
+    public abstract class NonTerminalExpression : Expression
     {
-        public override bool Interpret(Context context)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract override void Interpret(Context context);
     }
 }
