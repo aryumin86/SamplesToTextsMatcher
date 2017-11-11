@@ -19,6 +19,24 @@ namespace SamplesToTextsMatcher.Entities
         /// <value>The raw expression.</value>
         public string Raw { get; set; }
 
+        /// <summary>
+        /// Parent node.
+        /// </summary>
+        /// <value>The parent.</value>
+        public Expression Parent { get; set; }
+
+        /// <summary>
+        /// Left child node.
+        /// </summary>
+        /// <value>The left child.</value>
+        public Expression LeftChild { get; set; }
+
+        /// <summary>
+        /// Right child node.
+        /// </summary>
+        /// <value>The right child.</value>
+        public Expression RightChild { get; set; }
+
         public abstract void Interpret(Context context);
     }
 }

@@ -4,17 +4,17 @@ using SamplesToTextsMatcher.Entities;
 namespace SamplesToTextsMatcher
 {
     /// <summary>
-    /// Parses the input query, validates it structure and creates 
-    /// binary tree of query. 
+    /// Parses the input pattern, validates it structure and creates 
+    /// binary tree of pattern's expressions. 
     /// </summary>
-    public class QueryParser
+    public class PatternParser
     {
         /// <summary>
         /// Validate if a query string is logically valid.
         /// </summary>
         /// <returns><c>true</c>, if input was validated, <c>false</c> otherwise.</returns>
-        /// <param name="input">Input.</param>
-        public bool ValidateInput(string input){
+        /// <param name="context">context.</param>
+        public bool ValidateInput(Context context){
             throw new NotImplementedException();
         }
 
@@ -23,7 +23,7 @@ namespace SamplesToTextsMatcher
         /// </summary>
         /// <returns>Tree's root.</returns>
         /// <param name="input">Input.</param>
-        public Node ParseInput(string input){
+        public void ParseInput(Context context){
             throw new NotImplementedException();
         }
 
@@ -32,7 +32,7 @@ namespace SamplesToTextsMatcher
         /// </summary>
         /// <returns>The text first format.</returns>
         /// <param name="query">Query.</param>
-        private string queryTextFirstFormat(string query){
+        private string queryTextFirstFormat(string pattern){
             throw new NotImplementedException();
         }
 
@@ -46,7 +46,7 @@ namespace SamplesToTextsMatcher
         /// <param name="query">Raw query</param>
         /// <param name="tokenFormsMaxNumber">Maximum number of forms of token to 
         /// retrive from morphological dictionary</param>
-        private string resolveQueryAsterixOperators(string query, int tokenFormsMaxNumber){
+        private string resolveQueryAsterixOperators(Context context, int tokenFormsMaxNumber){
             throw new NotImplementedException();
         }
 
@@ -56,7 +56,7 @@ namespace SamplesToTextsMatcher
         /// </summary>
         /// <returns>The words forms for token.</returns>
         /// <param name="query">Query.</param>
-        private string getWordsFormsForToken(string query){
+        private string getWordsFormsForToken(Context context){
             throw new NotImplementedException();
         }
     }

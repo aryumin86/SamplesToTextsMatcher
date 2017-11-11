@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace SamplesToTextsMatcher.Entities
 {
     /// <summary>
@@ -7,10 +9,22 @@ namespace SamplesToTextsMatcher.Entities
     /// </summary>
     public class Context
     {
-        public string[] Input { get; }
+        public char[] Input { get; private set; }
 
-        public Context(string[] input){
-            this.Input = input;
+        /// <summary>
+        /// Queue of expressions got from input.
+        /// </summary>
+        /// <value>The expressions queue.</value>
+        public Queue<Expression> ExpressionsQueue { get; set; }
+
+        /// <summary>
+        /// Root of expressions binary tree.
+        /// </summary>
+        /// <value>The root.</value>
+        public Expression Root { get; set; }
+
+        public Context(string input){
+            this.Input = input.ToCharArray();
         }
     }
 }

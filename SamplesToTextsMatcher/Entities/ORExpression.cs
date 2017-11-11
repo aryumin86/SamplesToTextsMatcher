@@ -1,7 +1,7 @@
 ﻿using System;
 namespace SamplesToTextsMatcher.Entities
 {
-    public class ORExpression : Expression
+    public class ORExpression : NonTerminalExpression
     {
         public override void Interpret(Context context)
         {
