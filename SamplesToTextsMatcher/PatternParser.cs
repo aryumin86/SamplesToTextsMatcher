@@ -1,5 +1,6 @@
 ﻿using System;
 using SamplesToTextsMatcher.Entities;
+using System.Text.RegularExpressions;
 
 namespace SamplesToTextsMatcher
 {
@@ -9,34 +10,24 @@ namespace SamplesToTextsMatcher
     /// </summary>
     public class PatternParser
     {
+        private Context _context;
 
-
-        /// <summary>
-        /// Validate if a query string is logically valid.
-        /// </summary>
-        /// <returns><c>true</c>, if input was validated, <c>false</c> otherwise.</returns>
-        /// <param name="context">context.</param>
-        public bool ValidateInput(Context context){
-            throw new NotImplementedException();
+        public PatternParser(Context context){
+            this._context = context;
         }
+
+
 
         /// <summary>
         /// Parse input query and create tree.
         /// </summary>
         /// <returns>Tree's root.</returns>
         /// <param name="input">Input.</param>
-        public void ParseInput(Context context){
+        public void ParseInput(){
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Removes double spaces, make to lower case the query string etc.
-        /// </summary>
-        /// <returns>The text first format.</returns>
-        /// <param name="query">Query.</param>
-        private string queryTextFirstFormat(string pattern){
-            throw new NotImplementedException();
-        }
+
 
         /// <summary>
         /// If there are asterix operators in query - resolves it - 

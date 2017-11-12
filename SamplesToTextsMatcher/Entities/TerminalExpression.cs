@@ -17,13 +17,13 @@ namespace SamplesToTextsMatcher.Entities
 
         public TerminalExpression(string symbol){
             Raw = symbol;
-            NeedsExactForm = true;
+            NeedsExactForm = false;
             HasAsterixSign = false;
         }
 
         public override void Interpret(Context context)
         {
-            throw new NotImplementedException();
+            this.Result = true;
         }
     }
 }
