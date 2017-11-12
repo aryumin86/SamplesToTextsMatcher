@@ -15,10 +15,17 @@ namespace SamplesToTextsMatcher.Entities
         /// <value><c>true</c> if has asterix sign; otherwise, <c>false</c>.</value>
         public bool HasAsterixSign { get; set; }
 
-        public TerminalExpression(string symbol){
-            Raw = symbol;
+        /// <summary>
+        /// This term is included in quotes.
+        /// </summary>
+        /// <value><c>true</c> if in quotes; otherwise, <c>false</c>.</value>
+        public bool InQuotes { get; set; }
+
+        public TerminalExpression(string term){
+            Raw = term;
             NeedsExactForm = false;
             HasAsterixSign = false;
+            InQuotes = false;
         }
 
         public override void Interpret(Context context)

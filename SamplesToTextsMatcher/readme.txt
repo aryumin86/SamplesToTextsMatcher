@@ -10,3 +10,4 @@ Avaliable non-terminal expressions:
 6. /n
 7. =
 8. ? (no forms of word will be got from morphological dictionary - use '/n' operator instead)
+9. ()
