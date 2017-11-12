@@ -9,6 +9,8 @@ namespace SamplesToTextsMatcher
     /// </summary>
     public class PatternParser
     {
+
+
         /// <summary>
         /// Validate if a query string is logically valid.
         /// </summary>

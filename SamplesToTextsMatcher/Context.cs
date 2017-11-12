@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using SamplesToTextsMatcher.Entities;
 
-namespace SamplesToTextsMatcher.Entities
+namespace SamplesToTextsMatcher
 {
     /// <summary>
     /// Input string as tokens array where index is token's position
