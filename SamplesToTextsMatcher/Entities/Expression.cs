@@ -37,6 +37,18 @@ namespace SamplesToTextsMatcher.Entities
         /// <value>The right child.</value>
         public Expression RightChild { get; set; }
 
+        /// <summary>
+        /// Index of first letter of expression in raw pattern string.
+        /// </summary>
+        /// <value>The start index at raw.</value>
+        public int StartIndexAtRaw { get; set; }
+
+        /// <summary>
+        /// Index of last letter of expression in raw pattern string.
+        /// </summary>
+        /// <value>The end index at raw.</value>
+        public int EndIndexAtRaw { get; set; }
+
         public abstract void Interpret(Context context);
     }
 }

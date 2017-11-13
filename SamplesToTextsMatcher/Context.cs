@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SamplesToTextsMatcher.Entities;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace SamplesToTextsMatcher
 {
@@ -12,6 +13,8 @@ namespace SamplesToTextsMatcher
     public class Context
     {
         private string _pattern;
+        private AbstractMorfDictionary _dict;
+        private int _tokenFormsMaxNumberForAsterix;
 
         /// <summary>
         /// Queue of expressions got from input.
@@ -25,8 +28,9 @@ namespace SamplesToTextsMatcher
         /// <value>The root.</value>
         public Expression Root { get; set; }
 
-        public Context(string pattern){
+        public Context(string pattern, AbstractMorfDictionary dict, int tokenFormsMaxNumberForAsterix = 30){
             this._pattern = pattern;
+            this._dict = dict;
         }
 
         /// <summary>
@@ -36,7 +40,8 @@ namespace SamplesToTextsMatcher
         {
             queryTextFirstFormat();
             validateInput();
-            createExpressionsQueue();
+            createExpressionsList();
+            resolveQueryAsterixOperators();
             ModifyToInversePolishAndMakeTree();
         }
 
@@ -63,7 +68,6 @@ namespace SamplesToTextsMatcher
         /// <summary>
         /// Validate if a query string is logically valid.
         /// </summary>
-        /// <param name="context">context.</param>
         private void validateInput()
         {
             if (string.IsNullOrWhiteSpace(_pattern))
@@ -103,12 +107,161 @@ namespace SamplesToTextsMatcher
 
 
         /// <summary>
-        /// Making expressions queue.
+        /// Making expressions linked list.
         /// </summary>
-        private void createExpressionsQueue(){
+        private void createExpressionsList(){
             this.ExpressionsList = new LinkedList<Expression>();
+            char[] charArr = _pattern.ToCharArray();
 
-            throw new NotImplementedException();
+            for (int i = 0; i < charArr.Length; i++){
+                if (charArr[i] == ' ')
+                    continue;
+                else if(charArr[i] == '('){
+                    ExpressionsList.AddLast(new OpeningBracket()
+                    {
+                        StartIndexAtRaw = i,
+                        EndIndexAtRaw = i
+                    });
+
+                    continue;
+                }
+                else if (charArr[i] == ')')
+                {
+                    ExpressionsList.AddLast(new ClosingBracket()
+                    {
+                        StartIndexAtRaw = i,
+                        EndIndexAtRaw = i
+                    });
+
+                    continue;
+                }
+                else if (charArr[i] == '"')
+                {
+                    TerminalExpression term = getTerminalExpression(charArr, i);
+                    ExpressionsList.AddLast(term);
+                    i = term.EndIndexAtRaw;
+
+                    continue;
+                }
+                else if (charArr[i] == '*')
+                {
+
+
+                    continue;
+                }
+                else if (charArr[i] == '=')
+                {
+
+
+                    continue;
+                }
+
+                NonTerminalExpression exp = getNonTerminal(charArr, i);
+                if (exp == null){
+                    TerminalExpression term = getTerminalExpression(charArr, i);
+                    ExpressionsList.AddLast(term);
+                    i = term.EndIndexAtRaw;
+                    continue;
+                }
+                ExpressionsList.AddLast(exp);
+                i = exp.EndIndexAtRaw;
+            }
+        }
+
+        /// <summary>
+        /// If it is a start of NonTerminal expression this method will return the
+        /// NonTerminal Expression.
+        /// </summary>
+        /// <returns>The non terminal.</returns>
+        /// <param name="arr">Arr.</param>
+        /// <param name="startPosition">Start position.</param>
+        private NonTerminalExpression getNonTerminal(char[] arr, int startPosition){
+            NonTerminalExpression result = null;
+
+            switch(arr[startPosition]){
+                case '&':
+                    result = new ANDExpression()
+                    {
+                        StartIndexAtRaw = startPosition
+                    };
+                    break;
+
+                case '|':
+                    result = new ORExpression()
+                    {
+                        StartIndexAtRaw = startPosition
+                    };
+                    break;
+
+                case '~':
+                    result = new NOTExpression()
+                    {
+                        StartIndexAtRaw = startPosition
+                    };
+                    break;
+
+                case '/':
+                    int distanseCharLength = 0;
+                    while(char.IsDigit(arr[startPosition + 1])){
+                        distanseCharLength++;
+                    }
+
+                    if (distanseCharLength == 0)
+                        throw new FormatException("/n non-terminal format error - no n after /");
+
+                    result = new MaxDistExpression()
+                    {
+                        StartIndexAtRaw = startPosition,
+                        EndIndexAtRaw = startPosition + 1 + distanseCharLength,
+                        N = int.Parse(new string(arr.Skip(startPosition + 1).Take(distanseCharLength).ToArray()))
+                    };
+                    break;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Create terminal expression starting from startIndex.
+        /// </summary>
+        /// <returns>The terminal expression.</returns>
+        /// <param name="charArr">Char arr.</param>
+        /// <param name="startIndex">Start index.</param>
+        private TerminalExpression getTerminalExpression(char[] charArr, int startIndex){
+            TerminalExpression term = null;
+            int closingQuotesIndex = 0;
+            if(charArr[startIndex] == '"'){
+                closingQuotesIndex = charArr
+                    .Skip(startIndex + 1)
+                    .Select((x, y) => new { ch = x, index = y })
+                    .First(x => x.ch == '"')
+                    .index;
+
+                term = new TerminalExpression(
+                    new string(charArr.Skip(startIndex).Take(closingQuotesIndex - startIndex - 1).ToArray()))
+                {
+                    StartIndexAtRaw = startIndex + 1,
+                    EndIndexAtRaw = closingQuotesIndex - 1,
+                    InQuotes = true
+                };
+            }
+            else{
+                int i = 0;
+                while(true){
+                    if (charArr[i] == ' ' || charArr[i] == ')' || charArr[i] == '(' || charArr[i] == '|' || charArr[i] == '*' || charArr[i] == '&' || charArr[i] == '~' || charArr[i] == '/'){
+                        term = new TerminalExpression(new string(charArr.Skip(startIndex).Take(i).ToArray()))
+                        {
+                            StartIndexAtRaw = startIndex,
+                            EndIndexAtRaw = i-1,
+                            InQuotes = false
+                        };
+                        break;
+                    }
+                    i++;
+                }
+            }
+
+            return term;
         }
 
         /// <summary>
@@ -119,18 +272,16 @@ namespace SamplesToTextsMatcher
         }
 
         /// <summary>
-        /// If there are asterix operators in query - resolves it - 
-        /// appeal to morphological dictionary, gets the forms of words (if the
-        /// needed words are there and returns arrays of words with maximum number of
-        /// synonyms from argument of this method. 
+        /// If there are asterix operators in pattern - resolves it - 
+        /// appeal to morphological dictionary, gets the forms of words and add terms 
+        /// and OR expressions in form like: (form1 | form2 | form3 .... form999).
         /// </summary>
-        /// <returns>The query asterix operators.</returns>
-        /// <param name="query">Raw query</param>
-        /// <param name="tokenFormsMaxNumber">Maximum number of forms of token to 
-        /// retrive from morphological dictionary</param>
-        private string resolveQueryAsterixOperators(Context context, int tokenFormsMaxNumber)
+        private void resolveQueryAsterixOperators()
         {
-            throw new NotImplementedException();
+            if (_dict == null)
+                return;
+
+
         }
 
         /// <summary>
@@ -138,9 +289,13 @@ namespace SamplesToTextsMatcher
         /// (unless it is not in form like =word1 or like "word1 word2" or ="word1 word2"). 
         /// </summary>
         /// <returns>The words forms for token.</returns>
-        private void getWordsFormsForTokens(Context context)
+        private string[] getWordsFormsForTokens(string word)
         {
-            throw new NotImplementedException();
+            string[] result = null;
+
+
+
+            return result;
         }
     }
 }
