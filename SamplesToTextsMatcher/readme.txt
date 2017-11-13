@@ -4,11 +4,11 @@
 3. Pattern is parsed for linked list of expressions.
 4. Linked list is modified to reverse Polish notation of expressions presentation
 5. Syntax binary tree of expressions is created.
---- String/pattern comparison---
+--- String/pattern matching---
 6. String is cleaned
 7. String is tokenized. Positions of tokens are incapsulated in tokens objects.
 8. Each synax tree's node is resolved recursively. The result of resolving of the node is a boolean value.
-8. The result of comparing of string and pattern is boolean value of resolved tree's root. 
+8. The result of matching of string and pattern is boolean value of resolved tree's root. 
 
 
 Avaliable non-terminal expressions:
