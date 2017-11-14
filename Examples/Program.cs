@@ -11,7 +11,7 @@ namespace Examples
             Context context = new Context(pattern, null);
 
             bool parse1 = context.MatchPatternToString("это какой-то свин вот");
-            bool parse2 = context.MatchPatternToString("а это окорелла летит");
+            bool parse2 = context.MatchPatternToString("а это корелла летит");
 
             Console.ReadLine();
         }
