@@ -14,6 +14,7 @@ namespace SamplesToTextsMatcher
     {
         private string _pattern;
         private AbstractMorfDictionary _dict;
+        //TODO It should be got from config file.
         private int _tokenFormsMaxNumberForAsterix;
 
         /// <summary>
@@ -31,16 +32,11 @@ namespace SamplesToTextsMatcher
         public Context(string pattern, AbstractMorfDictionary dict, int tokenFormsMaxNumberForAsterix = 30){
             this._pattern = pattern;
             this._dict = dict;
-        }
 
-        /// <summary>
-        /// Parses input and creates binary tree.
-        /// </summary>
-        public void ParseInput()
-        {
             queryTextFirstFormat();
             validateInput();
             createExpressionsList();
+            ResolveAllEqualsSigns();
             resolveQueryAsterixOperators();
             ModifyToInversePolishAndMakeTree();
         }
@@ -145,14 +141,16 @@ namespace SamplesToTextsMatcher
                 }
                 else if (charArr[i] == '*')
                 {
-
+                    if (ExpressionsList.Last() == null || ExpressionsList.Last().GetType() != typeof(TerminalExpression))
+                        throw new FormatException("Asterix should be only at the end of term");
+                    else
+                        ((TerminalExpression)ExpressionsList.Last()).HasAsterixSign = true;
 
                     continue;
                 }
                 else if (charArr[i] == '=')
                 {
-
-
+                    ExpressionsList.AddLast(new EqualsSign());
                     continue;
                 }
 
@@ -182,21 +180,24 @@ namespace SamplesToTextsMatcher
                 case '&':
                     result = new ANDExpression()
                     {
-                        StartIndexAtRaw = startPosition
+                        StartIndexAtRaw = startPosition,
+                        EndIndexAtRaw = startPosition
                     };
                     break;
 
                 case '|':
                     result = new ORExpression()
                     {
-                        StartIndexAtRaw = startPosition
+                        StartIndexAtRaw = startPosition,
+                        EndIndexAtRaw = startPosition
                     };
                     break;
 
                 case '~':
                     result = new NOTExpression()
                     {
-                        StartIndexAtRaw = startPosition
+                        StartIndexAtRaw = startPosition,
+                        EndIndexAtRaw = startPosition
                     };
                     break;
 
@@ -212,7 +213,7 @@ namespace SamplesToTextsMatcher
                     result = new MaxDistExpression()
                     {
                         StartIndexAtRaw = startPosition,
-                        EndIndexAtRaw = startPosition + 1 + distanseCharLength,
+                        EndIndexAtRaw = startPosition + distanseCharLength,
                         N = int.Parse(new string(arr.Skip(startPosition + 1).Take(distanseCharLength).ToArray()))
                     };
                     break;
@@ -246,13 +247,13 @@ namespace SamplesToTextsMatcher
                 };
             }
             else{
-                int i = 0;
+                int i = startIndex;
                 while(true){
-                    if (charArr[i] == ' ' || charArr[i] == ')' || charArr[i] == '(' || charArr[i] == '|' || charArr[i] == '*' || charArr[i] == '&' || charArr[i] == '~' || charArr[i] == '/'){
+                    if (charArr.Length-1 == i || charArr[i] == ' ' || charArr[i] == ')' || charArr[i] == '(' || charArr[i] == '|' || charArr[i] == '*' || charArr[i] == '&' || charArr[i] == '~' || charArr[i] == '/'){
                         term = new TerminalExpression(new string(charArr.Skip(startIndex).Take(i).ToArray()))
                         {
                             StartIndexAtRaw = startIndex,
-                            EndIndexAtRaw = i-1,
+                            EndIndexAtRaw = i,
                             InQuotes = false
                         };
                         break;
@@ -296,6 +297,29 @@ namespace SamplesToTextsMatcher
 
 
             return result;
+        }
+
+        /// <summary>
+        /// If epression is equals sign it updates the term's property NeedsExactForm after it
+        /// and removes this object from list.
+        /// </summary>
+        private void ResolveAllEqualsSigns(){
+            bool nextTermShouldBeInExactForm = false;
+            int count = 0;
+            foreach(var exp in ExpressionsList){
+                if(nextTermShouldBeInExactForm){
+                    ((TerminalExpression)exp).NeedsExactForm = true;
+                    nextTermShouldBeInExactForm = false;
+                }
+                count++;
+                if(exp is EqualsSign){
+                    if (count == ExpressionsList.Count())
+                        throw new FormatException("equals sign can't be the last expression in a pattern");
+                    nextTermShouldBeInExactForm = true;
+                    continue;
+                }
+                nextTermShouldBeInExactForm = false;
+            }
         }
     }
 }
