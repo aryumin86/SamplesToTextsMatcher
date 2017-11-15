@@ -24,6 +24,11 @@ namespace SamplesToTextsMatcher
         public LinkedList<Expression> ExpressionsList { get; set; }
 
         /// <summary>
+        /// This is the result queue in inverse polish nitation.
+        /// </summary>
+        public Queue<Expression> InversedPolishQueue { get; set; }
+
+        /// <summary>
         /// Root of expressions binary tree.
         /// </summary>
         /// <value>The root.</value>
@@ -32,13 +37,15 @@ namespace SamplesToTextsMatcher
         public Context(string pattern, AbstractMorfDictionary dict, int tokenFormsMaxNumberForAsterix = 30){
             this._pattern = pattern;
             this._dict = dict;
+            InversedPolishQueue = new Queue<Expression>();
 
             queryTextFirstFormat();
             validateInput();
             createExpressionsList();
             ResolveAllEqualsSigns();
             resolveQueryAsterixOperators();
-            ModifyToInversePolishAndMakeTree();
+            ModifyToInversePolish();
+            CreateTreeFromQueue();
         }
 
         /// <summary>
@@ -210,11 +217,10 @@ namespace SamplesToTextsMatcher
                     if (distanseCharLength == 0)
                         throw new FormatException("/n non-terminal format error - no n after /");
 
-                    result = new MaxDistExpression()
+                    result = new MaxDistExpression(int.Parse(new string(arr.Skip(startPosition + 1).Take(distanseCharLength).ToArray())))
                     {
                         StartIndexAtRaw = startPosition,
-                        EndIndexAtRaw = startPosition + distanseCharLength,
-                        N = int.Parse(new string(arr.Skip(startPosition + 1).Take(distanseCharLength).ToArray()))
+                        EndIndexAtRaw = startPosition + distanseCharLength
                     };
                     break;
             }
@@ -268,8 +274,66 @@ namespace SamplesToTextsMatcher
         /// <summary>
         /// Modifies to inverse polish notaion and makes tree.
         /// </summary>
-        private void ModifyToInversePolishAndMakeTree(){
-            throw new NotImplementedException();
+        private void ModifyToInversePolish(){
+            Stack<Expression> stack = new Stack<Expression>();
+
+            var arr = ExpressionsList.ToArray();
+            for (int i = 0; i < arr.Length; i++){
+                if(arr[i] is TerminalExpression){
+                    InversedPolishQueue.Enqueue(arr[i]);
+                }
+                else if(arr[i] is OpeningBracket){
+                    stack.Push(arr[i]);
+                }
+                else if(arr[i] is ClosingBracket){
+                    while (true)
+                    {
+                        Expression exp = stack.Pop();
+                        if (exp is OpeningBracket)
+                            break;
+                        InversedPolishQueue.Enqueue(exp);
+                        if (!stack.Any())
+                            throw new Exception("No closing bracket for opened one");
+                    }
+                }
+                else if(arr[i] is NonTerminalExpression){
+                    while (stack.Any() && ((NonTerminalExpression)stack.Peek()).Priority >= ((NonTerminalExpression)arr[i]).Priority)
+                    {
+                        InversedPolishQueue.Enqueue(stack.Pop());
+                    }
+                    stack.Push(arr[i]);
+                }
+            }
+
+            while (stack.Any())
+                InversedPolishQueue.Enqueue(stack.Pop());
+
+            Root = InversedPolishQueue.Last();
+        }
+
+        /// <summary>
+        /// Creates the tree from queue.
+        /// </summary>
+        private void CreateTreeFromQueue(){
+            Queue<Expression> qu = new Queue<Expression>(InversedPolishQueue);
+            Stack<Expression> temp = new Stack<Expression>();
+
+            while(temp.Any()){
+                var z = qu.Dequeue();
+                if (z is TerminalExpression)
+                {
+                    temp.Push(z);
+                }
+                else
+                {
+                    var exp1 = temp.Pop();
+                    var exp2 = temp.Pop();
+                    z.LeftChild = exp1;
+                    z.RightChild = exp2;
+                    z.LeftChild.Parent = z;
+                    z.RightChild.Parent = z;
+                }
+            }
         }
 
         /// <summary>

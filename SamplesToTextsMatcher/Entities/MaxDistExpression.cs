@@ -9,6 +9,11 @@ namespace SamplesToTextsMatcher.Entities
         /// <value>The n.</value>
         public int N { get; set; }
 
+        public MaxDistExpression(int n){
+            Priority = 2;
+            Raw = "/" + n;
+        }
+
         public override void Interpret(Context context)
         {
             throw new NotImplementedException();
