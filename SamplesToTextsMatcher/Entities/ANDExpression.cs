@@ -4,7 +4,7 @@ namespace SamplesToTextsMatcher.Entities
     public class ANDExpression : NonTerminalExpression
     {
         public ANDExpression(){
-            Priority = 2;
+            Priority = 3;
             Raw = "&";
         }
 

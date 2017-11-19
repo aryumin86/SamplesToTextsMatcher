@@ -10,7 +10,7 @@ namespace SamplesToTextsMatcher.Entities
         public int N { get; set; }
 
         public MaxDistExpression(int n){
-            Priority = 2;
+            Priority = 3;
             Raw = "/" + n;
         }
 

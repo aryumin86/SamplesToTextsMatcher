@@ -4,7 +4,7 @@ namespace SamplesToTextsMatcher.Entities
     public class ORExpression : NonTerminalExpression
     {
         public ORExpression(){
-            Priority = 1;
+            Priority = 2;
             Raw = "|";
         }
 

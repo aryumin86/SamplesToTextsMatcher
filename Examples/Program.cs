@@ -7,7 +7,8 @@ namespace Examples
     {
         static void Main(string[] args)
         {
-            string pattern = "свин | корелла";
+            //string pattern = "свин | корелла & корова";
+            string pattern = "(свин | корелла) & корова";
             Context context = new Context(pattern, null);
 
             bool parse1 = context.MatchPatternToString("это какой-то свин вот");

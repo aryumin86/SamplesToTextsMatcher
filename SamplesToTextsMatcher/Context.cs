@@ -15,7 +15,7 @@ namespace SamplesToTextsMatcher
         private string _pattern;
         private AbstractMorfDictionary _dict;
         //TODO It should be got from config file.
-        private int _tokenFormsMaxNumberForAsterix;
+        private int _tokenFormsMaxNumberForAsterix = 30;
 
         /// <summary>
         /// Queue of expressions got from input.
@@ -34,7 +34,7 @@ namespace SamplesToTextsMatcher
         /// <value>The root.</value>
         public Expression Root { get; set; }
 
-        public Context(string pattern, AbstractMorfDictionary dict, int tokenFormsMaxNumberForAsterix = 30){
+        public Context(string pattern, AbstractMorfDictionary dict){
             this._pattern = pattern;
             this._dict = dict;
             InversedPolishQueue = new Queue<Expression>();
@@ -255,11 +255,11 @@ namespace SamplesToTextsMatcher
             else{
                 int i = startIndex;
                 while(true){
-                    if (charArr.Length-1 == i || charArr[i] == ' ' || charArr[i] == ')' || charArr[i] == '(' || charArr[i] == '|' || charArr[i] == '*' || charArr[i] == '&' || charArr[i] == '~' || charArr[i] == '/'){
-                        term = new TerminalExpression(new string(charArr.Skip(startIndex).Take(i).ToArray()))
+                    if (charArr.Length == i || charArr[i] == ' ' || charArr[i] == ')' || charArr[i] == '(' || charArr[i] == '|' || charArr[i] == '*' || charArr[i] == '&' || charArr[i] == '~' || charArr[i] == '/'){
+                        term = new TerminalExpression(new string(charArr.Skip(startIndex).Take(i - startIndex).ToArray()))
                         {
                             StartIndexAtRaw = startIndex,
-                            EndIndexAtRaw = i,
+                            EndIndexAtRaw = i-1,
                             InQuotes = false
                         };
                         break;
@@ -272,13 +272,17 @@ namespace SamplesToTextsMatcher
         }
 
         /// <summary>
-        /// Modifies to inverse polish notaion and makes tree.
+        /// Modifies to inverses polish notaion and makes tree.
         /// </summary>
         private void ModifyToInversePolish(){
             Stack<Expression> stack = new Stack<Expression>();
 
             var arr = ExpressionsList.ToArray();
             for (int i = 0; i < arr.Length; i++){
+
+                //delete this!!!!
+                var elem = arr[i];
+
                 if(arr[i] is TerminalExpression){
                     InversedPolishQueue.Enqueue(arr[i]);
                 }
@@ -297,6 +301,7 @@ namespace SamplesToTextsMatcher
                     }
                 }
                 else if(arr[i] is NonTerminalExpression){
+                    
                     while (stack.Any() && ((NonTerminalExpression)stack.Peek()).Priority >= ((NonTerminalExpression)arr[i]).Priority)
                     {
                         InversedPolishQueue.Enqueue(stack.Pop());
@@ -307,8 +312,6 @@ namespace SamplesToTextsMatcher
 
             while (stack.Any())
                 InversedPolishQueue.Enqueue(stack.Pop());
-
-            Root = InversedPolishQueue.Last();
         }
 
         /// <summary>
@@ -318,13 +321,9 @@ namespace SamplesToTextsMatcher
             Queue<Expression> qu = new Queue<Expression>(InversedPolishQueue);
             Stack<Expression> temp = new Stack<Expression>();
 
-            while(temp.Any()){
+            while(qu.Any()){
                 var z = qu.Dequeue();
-                if (z is TerminalExpression)
-                {
-                    temp.Push(z);
-                }
-                else
+                if (z is NonTerminalExpression)
                 {
                     var exp1 = temp.Pop();
                     var exp2 = temp.Pop();
@@ -332,7 +331,11 @@ namespace SamplesToTextsMatcher
                     z.RightChild = exp2;
                     z.LeftChild.Parent = z;
                     z.RightChild.Parent = z;
+
+                    Root = z;
                 }
+
+                temp.Push(z);
             }
         }
 

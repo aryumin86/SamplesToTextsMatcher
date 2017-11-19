@@ -4,7 +4,7 @@ namespace SamplesToTextsMatcher.Entities
     public class NOTExpression : NonTerminalExpression
     {
         public NOTExpression(){
-            Priority = 2;
+            Priority = 3;
             Raw = "~";
         }
 

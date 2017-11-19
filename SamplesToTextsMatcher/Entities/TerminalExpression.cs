@@ -23,9 +23,9 @@ namespace SamplesToTextsMatcher.Entities
 
         public TerminalExpression(string term){
             Raw = term;
-            NeedsExactForm = false;
-            HasAsterixSign = false;
-            InQuotes = false;
+            //NeedsExactForm = false;
+            //HasAsterixSign = false;
+            //InQuotes = false;
         }
 
         public override void Interpret(Context context)
