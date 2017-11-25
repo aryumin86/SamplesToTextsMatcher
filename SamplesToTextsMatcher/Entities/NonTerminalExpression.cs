@@ -9,6 +9,6 @@ namespace SamplesToTextsMatcher.Entities
         /// <value>The priority.</value>
         public int Priority { get; set; }
 
-        public abstract override void Interpret(Context context);
+        public abstract override bool Interpret(Context context);
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+
 namespace SamplesToTextsMatcher.Entities
 {
     public class TerminalExpression : Expression
@@ -21,16 +23,20 @@ namespace SamplesToTextsMatcher.Entities
         /// <value><c>true</c> if in quotes; otherwise, <c>false</c>.</value>
         public bool InQuotes { get; set; }
 
-        public TerminalExpression(string term){
+        public TerminalExpression(string term)
+        {
             Raw = term;
-            //NeedsExactForm = false;
-            //HasAsterixSign = false;
-            //InQuotes = false;
         }
 
-        public override void Interpret(Context context)
+        public override bool Interpret(Context context)
         {
-            this.Result = true;
+            if (string.IsNullOrEmpty(Raw))
+                throw new FormatException("No value for terminal");
+
+            if (context.CurrentStringToMatchWithTree.Contains(Raw))
+                return true;
+
+            return false;
         }
     }
 }

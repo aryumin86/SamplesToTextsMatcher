@@ -29,6 +29,13 @@ namespace SamplesToTextsMatcher
         public Queue<Expression> InversedPolishQueue { get; set; }
 
         /// <summary>
+        /// Gets or sets the current string to match with tree.
+        /// It is represented as strings array.
+        /// </summary>
+        /// <value>The current string to match with tree.</value>
+        public string[] CurrentStringToMatchWithTree { get; set; }
+
+        /// <summary>
         /// Root of expressions binary tree.
         /// </summary>
         /// <value>The root.</value>
@@ -53,8 +60,9 @@ namespace SamplesToTextsMatcher
         /// </summary>
         /// <returns><c>true</c>, if pattern to string was matched, <c>false</c> otherwise.</returns>
         /// <param name="input">Input.</param>
-        public bool MatchPatternToString(string input){
-            throw new NotImplementedException();
+        public bool MatchPatternToString(string[] input){
+            CurrentStringToMatchWithTree = input;
+            return Root.Interpret(this);
         }
 
         /// <summary>
@@ -210,7 +218,7 @@ namespace SamplesToTextsMatcher
 
                 case '/':
                     int distanseCharLength = 0;
-                    while(char.IsDigit(arr[startPosition + 1])){
+                    while(char.IsDigit(arr[startPosition + distanseCharLength + 1])){
                         distanseCharLength++;
                     }
 

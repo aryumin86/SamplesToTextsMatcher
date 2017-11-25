@@ -8,9 +8,10 @@ namespace SamplesToTextsMatcher.Entities
     {
         public OpeningBracket(){
             Priority = 1;
+            Raw = "(";
         }
 
-        public override void Interpret(Context context)
+        public override bool Interpret(Context context)
         {
             throw new NotImplementedException();
         }

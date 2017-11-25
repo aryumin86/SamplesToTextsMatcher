@@ -7,13 +7,6 @@ namespace SamplesToTextsMatcher.Entities
     public abstract class Expression
     {
         /// <summary>
-        /// Boolean result of expression's interpretation.
-        /// If not Interpreted - it is null.
-        /// </summary>
-        /// <value>The interpretation result.</value>
-        public bool? Result { get; set; }
-
-        /// <summary>
         /// Non-interpreted expression as string.
         /// </summary>
         /// <value>The raw expression.</value>
@@ -49,6 +42,6 @@ namespace SamplesToTextsMatcher.Entities
         /// <value>The end index at raw.</value>
         public int EndIndexAtRaw { get; set; }
 
-        public abstract void Interpret(Context context);
+        public abstract bool Interpret(Context ctx);
     }
 }

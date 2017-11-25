@@ -5,12 +5,19 @@ namespace SamplesToTextsMatcher.Entities
     {
         public NOTExpression(){
             Priority = 3;
-            Raw = "~";
+            Raw = " ~ ";
         }
 
-        public override void Interpret(Context context)
+        public override bool Interpret(Context context)
         {
-            throw new NotImplementedException();
+            if (LeftChild == null)
+                throw new FormatException("Can't interpret non-terminal without left child");
+            if (RightChild == null)
+            {
+                throw new FormatException("Can't interpret non-terminal without right child");
+            }
+
+            return !(LeftChild.Interpret(context) && RightChild.Interpret(context));
         }
     }
 }

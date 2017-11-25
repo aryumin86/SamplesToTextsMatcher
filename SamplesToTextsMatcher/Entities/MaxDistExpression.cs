@@ -12,9 +12,10 @@ namespace SamplesToTextsMatcher.Entities
         public MaxDistExpression(int n){
             Priority = 3;
             Raw = "/" + n;
+            N = n;
         }
 
-        public override void Interpret(Context context)
+        public override bool Interpret(Context context)
         {
             throw new NotImplementedException();
         }
