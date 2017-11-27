@@ -27,8 +27,8 @@ namespace SamplesToTextsMatcher.Entities
 
             for (int i = 0; i < TermRepresentedInRaw.Length; i++)
             {
-                if (RightChild.TermRepresentedInRaw[i] == true)
-                    TermRepresentedInRaw[i] = false;
+                if (RightChild.TermRepresentedInRaw[i] == false && LeftChild.TermRepresentedInRaw[i] == true)
+                    TermRepresentedInRaw[i] = true;
             }
 
             return res;
