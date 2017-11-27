@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace SamplesToTextsMatcher.Entities
 {
     /// <summary>
@@ -43,5 +44,12 @@ namespace SamplesToTextsMatcher.Entities
         public int EndIndexAtRaw { get; set; }
 
         public abstract bool Interpret(Context ctx);
+
+        /// <summary>
+        /// This array is for recursive interpretation of symtax tree for distance 
+        /// operator. If true - this word from raw is actual for interpretation of node.
+        /// </summary>
+        /// <value>The actual terms at raw.</value>
+        public bool[] TermRepresentedInRaw { get; set; }
     }
 }

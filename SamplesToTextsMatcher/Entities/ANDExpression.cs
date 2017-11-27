@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+
 namespace SamplesToTextsMatcher.Entities
 {
     public class ANDExpression : NonTerminalExpression
@@ -16,7 +18,19 @@ namespace SamplesToTextsMatcher.Entities
                 throw new FormatException("Can't interpret non-terminal without right child");
             }
 
-            return LeftChild.Interpret(context) && RightChild.Interpret(context);
+            var res = LeftChild.Interpret(context) && RightChild.Interpret(context);
+
+            TermRepresentedInRaw =
+                Enumerable.Repeat<bool>(false, context.CurrentStringToMatchWithTree.Length)
+                          .ToArray();
+
+            for (int i = 0; i < TermRepresentedInRaw.Length; i++)
+            {
+                if (LeftChild.TermRepresentedInRaw[i] == true && RightChild.TermRepresentedInRaw[i] == true)
+                    TermRepresentedInRaw[i] = true;
+            }
+
+            return res;
         }
     }
 }

@@ -33,10 +33,18 @@ namespace SamplesToTextsMatcher.Entities
             if (string.IsNullOrEmpty(Raw))
                 throw new FormatException("No value for terminal");
 
-            if (context.CurrentStringToMatchWithTree.Contains(Raw))
-                return true;
+            TermRepresentedInRaw = new bool[context.CurrentStringToMatchWithTree.Length];
 
-            return false;
+            bool res = false;
+
+            for (int i = 0; i < context.CurrentStringToMatchWithTree.Length; i++){
+                if(context.CurrentStringToMatchWithTree[i] == Raw){
+                    TermRepresentedInRaw[i] = true;
+                    res = true;
+                }
+            }
+
+            return res;
         }
     }
 }
