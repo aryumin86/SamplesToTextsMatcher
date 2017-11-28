@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+
 namespace SamplesToTextsMatcher.Entities
 {
     public class MaxDistExpression : NonTerminalExpression
@@ -32,12 +34,49 @@ namespace SamplesToTextsMatcher.Entities
 
             bool res = false;
 
+            TermRepresentedInRaw =
+                Enumerable.Repeat<bool>(false, context.CurrentStringToMatchWithTree.Length)
+                          .ToArray();
+
             //moving both sides from left child term (for each term left from previos interpretations)  
             //trying 1. to find any match for two terms staying near (near = <= N)
             //and 2. to identifing terms from raw string which will be used for 
             //consequent interpretations
             for (int i = 0; i < context.CurrentStringToMatchWithTree.Length; i++){
-                
+
+                if (LeftChild.TermRepresentedInRaw[i] == false)
+                    continue;
+
+                int pacesDoneCount = 0;
+
+                //to left moves within N distance
+                for (int j = i; j >= 0; --j){
+                    if(RightChild.TermRepresentedInRaw[j] == true){
+                        TermRepresentedInRaw[j] = true;
+                        res = true;
+                    }
+
+                    pacesDoneCount++;
+                    if (pacesDoneCount > N)
+                        break;
+                }
+
+                pacesDoneCount = 0;
+
+                //to rights moves within N distance
+                for (int j = i+1; j < context.CurrentStringToMatchWithTree.Length; ++j)
+                {
+                    if (RightChild.TermRepresentedInRaw[j] == true)
+                    {
+                        TermRepresentedInRaw[j] = true;
+                        res = true;
+                    }
+
+                    pacesDoneCount++;
+                    if (pacesDoneCount > N)
+                        break;
+                }
+
             }
 
             return res;
