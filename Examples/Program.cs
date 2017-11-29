@@ -9,9 +9,19 @@ namespace Examples
         {
             //string pattern = "свин | корелла & корова";
             //string pattern = "(свин | корелла) & корова";
-            string pattern = "(свин | корелла) /2 корова";
+            //string pattern = "((свин | корелла) /2 (корова | бобер)) ~какаду";
+            string pattern = "\"мокрая корелла\" & волнистый";
 
             Context context = new Context(pattern, null);
+
+
+            bool match7 = context.MatchPatternToString(new string[]{
+                "корова", "и", "и", "\"мокрая корелла\"", "и", "волнистый"
+            });
+
+            bool match6 = context.MatchPatternToString(new string[]{
+                "корова", "и", "и", "корелла"
+            });
 
             bool match1 = context.MatchPatternToString(new string[]{
                 "это","какой-то","свин","вот"

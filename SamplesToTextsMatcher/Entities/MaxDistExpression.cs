@@ -50,7 +50,7 @@ namespace SamplesToTextsMatcher.Entities
                 int pacesDoneCount = 0;
 
                 //to left moves within N distance
-                for (int j = i; j >= 0; --j){
+                for (int j = i-1; j >= 0; --j){
                     if(RightChild.TermRepresentedInRaw[j] == true){
                         TermRepresentedInRaw[j] = true;
                         res = true;

@@ -250,13 +250,13 @@ namespace SamplesToTextsMatcher
                     .Skip(startIndex + 1)
                     .Select((x, y) => new { ch = x, index = y })
                     .First(x => x.ch == '"')
-                    .index;
+                    .index + 1;
 
                 term = new TerminalExpression(
-                    new string(charArr.Skip(startIndex).Take(closingQuotesIndex - startIndex - 1).ToArray()))
+                    "\"" + new string(charArr.Skip(startIndex + 1).Take(closingQuotesIndex - startIndex - 1).ToArray()) + "\"")
                 {
-                    StartIndexAtRaw = startIndex + 1,
-                    EndIndexAtRaw = closingQuotesIndex - 1,
+                    StartIndexAtRaw = startIndex,
+                    EndIndexAtRaw = closingQuotesIndex,
                     InQuotes = true
                 };
             }
@@ -335,8 +335,8 @@ namespace SamplesToTextsMatcher
                 {
                     var exp1 = temp.Pop();
                     var exp2 = temp.Pop();
-                    z.LeftChild = exp1;
-                    z.RightChild = exp2;
+                    z.LeftChild = exp2;
+                    z.RightChild = exp1;
                     z.LeftChild.Parent = z;
                     z.RightChild.Parent = z;
 
