@@ -143,11 +143,11 @@ namespace SamplesToTextsMatcherTests
             string pattern = "\"синяя корелла\" /3 \"зеленая какаду\"";
             Context context = new Context(pattern, null);
             bool res = context.MatchPatternToString(new string[]{
-                "синяя корелла",
+                "\"синяя корелла\"",
                 "выдра",
                 "выхухоль",
                 "арбуз",
-                "зеленая какаду"
+                "\"зеленая какаду\""
             });
 
             Assert.True(res);

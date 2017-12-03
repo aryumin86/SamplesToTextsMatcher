@@ -251,7 +251,7 @@ namespace SamplesToTextsMatcher
                     .Skip(startIndex + 1)
                     .Select((x, y) => new { ch = x, index = y })
                     .First(x => x.ch == '"')
-                    .index + 1;
+                    .index + 1 + startIndex;
 
                 term = new TerminalExpression(
                     "\"" + new string(charArr.Skip(startIndex + 1).Take(closingQuotesIndex - startIndex - 1).ToArray()) + "\"")
