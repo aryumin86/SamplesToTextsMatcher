@@ -12,6 +12,16 @@ namespace SamplesToTextsMatcher
     /// </summary>
     public class Context
     {
+        /// <summary>
+        /// Id of context.
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// This context is a part of contexts groups with this Id.
+        /// </summary>
+        public int GroupId { get; set; }
+
         private string _pattern;
         private AbstractMorfDictionary _dict;
         //TODO It should be got from config file.
@@ -41,7 +51,14 @@ namespace SamplesToTextsMatcher
         /// <value>The root.</value>
         public Expression Root { get; set; }
 
-        public Context(string pattern, AbstractMorfDictionary dict){
+        /// <summary>
+        /// Main constructor.
+        /// </summary>
+        /// <param name="pattern"></param>
+        /// <param name="dict"></param>
+        /// <param name="shouldWorkWithTermsForms">for example if pattern is from db 
+        /// - all forms are already in pattern and no need for them</param>
+        public Context(string pattern, AbstractMorfDictionary dict, bool shouldWorkWithTermsForms){
             this._pattern = pattern;
             this._dict = dict;
             InversedPolishQueue = new Queue<Expression>();

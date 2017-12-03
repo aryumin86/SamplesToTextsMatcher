@@ -51,5 +51,11 @@ namespace SamplesToTextsMatcher.Entities
         /// </summary>
         /// <value>The actual terms at raw.</value>
         public bool[] TermRepresentedInRaw { get; set; }
+
+        /// <summary>
+        /// Result string of all terminals and non terminals (with forms of terms
+        /// and asterix resolving forms of terms). This string could be saved in db.
+        /// </summary>
+        public string ResStringExpression { get; set; }
     }
 }

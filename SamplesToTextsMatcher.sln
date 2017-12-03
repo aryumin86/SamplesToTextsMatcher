@@ -1,11 +1,14 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplesToTextsMatcher", "SamplesToTextsMatcher\SamplesToTextsMatcher.csproj", "{4AD1A6E3-AC54-49D6-8A9C-ADC3FB2D6851}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SamplesToTextsMatcher", "SamplesToTextsMatcher\SamplesToTextsMatcher.csproj", "{4AD1A6E3-AC54-49D6-8A9C-ADC3FB2D6851}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{F71A1DA9-79B8-4F24-9823-984E70F60AA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "Examples\Examples.csproj", "{F71A1DA9-79B8-4F24-9823-984E70F60AA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplesToTextsMatcherTests", "SamplesToTextsMatcherTests\SamplesToTextsMatcherTests.csproj", "{8D8AB35A-2BE1-4313-82EA-755B0052B2D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SamplesToTextsMatcherTests", "SamplesToTextsMatcherTests\SamplesToTextsMatcherTests.csproj", "{8D8AB35A-2BE1-4313-82EA-755B0052B2D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorfDictionaryPopulator", "MorfDictionaryPopulator\MorfDictionaryPopulator.csproj", "{1C984AFE-D982-4F2F-BC22-D8CC8DEE91D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,5 +28,15 @@ Global
 		{8D8AB35A-2BE1-4313-82EA-755B0052B2D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D8AB35A-2BE1-4313-82EA-755B0052B2D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D8AB35A-2BE1-4313-82EA-755B0052B2D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C984AFE-D982-4F2F-BC22-D8CC8DEE91D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C984AFE-D982-4F2F-BC22-D8CC8DEE91D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C984AFE-D982-4F2F-BC22-D8CC8DEE91D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C984AFE-D982-4F2F-BC22-D8CC8DEE91D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4C723D5-2CDA-4B75-A476-E133579E6527}
 	EndGlobalSection
 EndGlobal
