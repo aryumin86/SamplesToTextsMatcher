@@ -107,7 +107,7 @@ namespace SamplesToTextsMatcher
                         throw new FormatException("Pattern validation error. Asterix can be only at the end of the term");
                 }
                 else if(inputArr[i] == '='){
-                    if (i == inputArr.Length - 1 || inputArr[i + 1] != '"' || !char.IsLetter(inputArr[i + 1]))
+                    if (i == inputArr.Length - 1 || (inputArr[i + 1] != '"' && !char.IsLetter(inputArr[i + 1])))
                         throw new FormatException("Pattern validation error. Equals sign can be only before letter or quotes sign");
                     
                 }
