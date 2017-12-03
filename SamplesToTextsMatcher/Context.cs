@@ -346,6 +346,10 @@ namespace SamplesToTextsMatcher
 
                 temp.Push(z);
             }
+
+            //if there is only terminal in whole expression. ??????????????
+            if (temp.Any())
+                Root = temp.Pop();
         }
 
         /// <summary>
