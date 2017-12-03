@@ -9,7 +9,7 @@ namespace Examples
         {
             //string pattern = "свин | корелла & корова";
             //string pattern = "(свин | корелла) & корова";
-            //string pattern = "((свин | корелла) /2 (корова | бобер)) ~какаду";
+            //string pattern = "((свин | корелл*) /2 (=корова | \"оранжевый бобер\")) ~какаду";
             string pattern = "\"мокрая корелла\" & волнистый";
 
             Context context = new Context(pattern, null);

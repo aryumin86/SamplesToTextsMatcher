@@ -50,6 +50,7 @@ namespace SamplesToTextsMatcher
             validateInput();
             createExpressionsList();
             ResolveAllEqualsSigns();
+            getWordsFormsForTokens();
             resolveQueryAsterixOperators();
             ModifyToInversePolish();
             CreateTreeFromQueue();
@@ -365,13 +366,10 @@ namespace SamplesToTextsMatcher
         /// (unless it is not in form like =word1 or like "word1 word2" or ="word1 word2"). 
         /// </summary>
         /// <returns>The words forms for token.</returns>
-        private string[] getWordsFormsForTokens(string word)
+        private void getWordsFormsForTokens()
         {
-            string[] result = null;
-
-
-
-            return result;
+            if (_dict == null)
+                return;
         }
 
         /// <summary>
