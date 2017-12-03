@@ -51,6 +51,8 @@ namespace SamplesToTextsMatcher
         /// <value>The root.</value>
         public Expression Root { get; set; }
 
+        private bool _shouldWorkWithTermsForms;
+
         /// <summary>
         /// Main constructor.
         /// </summary>
@@ -58,9 +60,10 @@ namespace SamplesToTextsMatcher
         /// <param name="dict"></param>
         /// <param name="shouldWorkWithTermsForms">for example if pattern is from db 
         /// - all forms are already in pattern and no need for them</param>
-        public Context(string pattern, AbstractMorfDictionary dict, bool shouldWorkWithTermsForms){
+        public Context(string pattern, AbstractMorfDictionary dict, bool shouldWorkWithTermsForms = true){
             this._pattern = pattern;
             this._dict = dict;
+            this._shouldWorkWithTermsForms = shouldWorkWithTermsForms;
             InversedPolishQueue = new Queue<Expression>();
 
             queryTextFirstFormat();
@@ -376,7 +379,7 @@ namespace SamplesToTextsMatcher
         /// </summary>
         private void resolveQueryAsterixOperators()
         {
-            if (_dict == null)
+            if (_dict == null || !_shouldWorkWithTermsForms)
                 return;
 
 
@@ -389,8 +392,13 @@ namespace SamplesToTextsMatcher
         /// <returns>The words forms for token.</returns>
         private void getWordsFormsForTokens()
         {
-            if (_dict == null)
+            if (_dict == null || !_shouldWorkWithTermsForms)
                 return;
+
+            for (LinkedListNode<Expression> it = ExpressionsList.First; it != null;)
+            {
+
+            }
         }
 
         /// <summary>
