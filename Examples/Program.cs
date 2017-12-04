@@ -10,7 +10,7 @@ namespace Examples
             //string pattern = "свин | корелла & корова";
             //string pattern = "(свин | корелла) & корова";
             //string pattern = "((свин | корелл*) /2 (=корова | \"оранжевый бобер\")) ~какаду";
-            string pattern = "\"мокрая корелла\" & волнистый";
+            string pattern = "\"мокрая корелла\" & волнистый | (корабли /4 (рыбки | рыбок | рыбками | водоросли))";
 
             Context context = new Context(pattern, new ConcretePatternParser(), null);
 

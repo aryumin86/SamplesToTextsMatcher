@@ -19,7 +19,13 @@ namespace SamplesToTextsMatcher.Entities
                 throw new FormatException("Can't interpret non-terminal without right child");
             }
 
-            var res = LeftChild.Interpret(context) | RightChild.Interpret(context);
+            var l = LeftChild.Interpret(context);
+            var r = RightChild.Interpret(context);
+
+            var res = l || r;
+
+            ResStringExpression = string.Format("({0} | {1})",
+                LeftChild.ResStringExpression, RightChild.ResStringExpression);
 
             TermRepresentedInRaw =
                 Enumerable.Repeat<bool>(false, context.CurrentStringToMatchWithTree.Length)

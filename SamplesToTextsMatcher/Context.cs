@@ -334,5 +334,14 @@ namespace SamplesToTextsMatcher
                 nextTermShouldBeInExactForm = false;
             }
         }
+
+        /// <summary>
+        /// It is needed for pattern initialization to form 
+        /// the ResStringExpression (e.g. to save it into db).
+        /// </summary>
+        private void FormResStringExpression()
+        {
+            this.MatchPatternToString(new string[] { "а" });
+        }
     }
 }

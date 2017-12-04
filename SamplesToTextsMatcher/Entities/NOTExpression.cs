@@ -21,7 +21,10 @@ namespace SamplesToTextsMatcher.Entities
 
             var l = LeftChild.Interpret(context);
             var r = RightChild.Interpret(context);
-            var res = l && !r; 
+            var res = l && !r;
+
+            ResStringExpression = string.Format("({0} ~ {1})",
+                LeftChild.ResStringExpression, RightChild.ResStringExpression);
 
             TermRepresentedInRaw =
                 Enumerable.Repeat<bool>(false, context.CurrentStringToMatchWithTree.Length)

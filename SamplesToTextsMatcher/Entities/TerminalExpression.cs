@@ -35,6 +35,8 @@ namespace SamplesToTextsMatcher.Entities
 
             TermRepresentedInRaw = new bool[context.CurrentStringToMatchWithTree.Length];
 
+            ResStringExpression = Raw;
+
             bool res = false;
 
             for (int i = 0; i < context.CurrentStringToMatchWithTree.Length; i++){

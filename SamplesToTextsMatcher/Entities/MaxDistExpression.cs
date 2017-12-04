@@ -26,17 +26,22 @@ namespace SamplesToTextsMatcher.Entities
                 throw new FormatException("Can't interpret non-terminal without right child");
             }
 
+            TermRepresentedInRaw =
+                Enumerable.Repeat<bool>(false, context.CurrentStringToMatchWithTree.Length)
+                          .ToArray();
+
             bool leftInterpetation = LeftChild.Interpret(context);
             bool rightInterpretation = RightChild.Interpret(context);
+
+            ResStringExpression = string.Format("({0} /{1} {2})",
+                LeftChild.ResStringExpression, N, RightChild.ResStringExpression);
 
             if (!leftInterpetation || !rightInterpretation)
                 return false;
 
             bool res = false;
 
-            TermRepresentedInRaw =
-                Enumerable.Repeat<bool>(false, context.CurrentStringToMatchWithTree.Length)
-                          .ToArray();
+            
 
             //moving both sides from left child term (for each term left from previos interpretations)  
             //trying 1. to find any match for two terms staying near (near = <= N)
