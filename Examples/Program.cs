@@ -12,7 +12,7 @@ namespace Examples
             //string pattern = "((свин | корелл*) /2 (=корова | \"оранжевый бобер\")) ~какаду";
             string pattern = "\"мокрая корелла\" & волнистый";
 
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, new ConcretePatternParser(), null);
 
 
             bool match7 = context.MatchPatternToString(new string[]{

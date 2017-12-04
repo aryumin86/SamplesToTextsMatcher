@@ -8,6 +8,6 @@ namespace SamplesToTextsMatcher
     /// </summary>
     public abstract class AbstractMorfDictionary
     {
-        public abstract List<string> GetSyns(string word);
+        public abstract List<string> GetSyns(string word, int max = Int32.MaxValue);
     }
 }

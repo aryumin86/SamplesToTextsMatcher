@@ -24,7 +24,7 @@ namespace SamplesToTextsMatcher
 
         private string _pattern;
         private AbstractMorfDictionary _dict;
-        //TODO It should be got from config file.
+        private AbstractPatternParser _parser;
         private int _tokenFormsMaxNumberForAsterix = 30;
 
         /// <summary>
@@ -60,9 +60,12 @@ namespace SamplesToTextsMatcher
         /// <param name="dict"></param>
         /// <param name="shouldWorkWithTermsForms">for example if pattern is from db 
         /// - all forms are already in pattern and no need for them</param>
-        public Context(string pattern, AbstractMorfDictionary dict, bool shouldWorkWithTermsForms = true){
+        public Context(string pattern, AbstractPatternParser parser, AbstractMorfDictionary dict, bool shouldWorkWithTermsForms = true, 
+            int _tokenFormsMaxNumberForAsterix = 30)
+        {
             this._pattern = pattern;
             this._dict = dict;
+            this._parser = parser;
             this._shouldWorkWithTermsForms = shouldWorkWithTermsForms;
             InversedPolishQueue = new Queue<Expression>();
 
@@ -142,163 +145,10 @@ namespace SamplesToTextsMatcher
         /// Making expressions linked list.
         /// </summary>
         private void createExpressionsList(){
-            this.ExpressionsList = new LinkedList<Expression>();
-            char[] charArr = _pattern.ToCharArray();
-
-            for (int i = 0; i < charArr.Length; i++){
-                if (charArr[i] == ' ')
-                    continue;
-                else if(charArr[i] == '('){
-                    ExpressionsList.AddLast(new OpeningBracket()
-                    {
-                        StartIndexAtRaw = i,
-                        EndIndexAtRaw = i
-                    });
-
-                    continue;
-                }
-                else if (charArr[i] == ')')
-                {
-                    ExpressionsList.AddLast(new ClosingBracket()
-                    {
-                        StartIndexAtRaw = i,
-                        EndIndexAtRaw = i
-                    });
-
-                    continue;
-                }
-                else if (charArr[i] == '"')
-                {
-                    TerminalExpression term = getTerminalExpression(charArr, i);
-                    ExpressionsList.AddLast(term);
-                    i = term.EndIndexAtRaw;
-
-                    continue;
-                }
-                else if (charArr[i] == '*')
-                {
-                    if (ExpressionsList.Last() == null || ExpressionsList.Last().GetType() != typeof(TerminalExpression))
-                        throw new FormatException("Asterix should be only at the end of term");
-                    else
-                        ((TerminalExpression)ExpressionsList.Last()).HasAsterixSign = true;
-
-                    continue;
-                }
-                else if (charArr[i] == '=')
-                {
-                    ExpressionsList.AddLast(new EqualsSign());
-                    continue;
-                }
-
-                NonTerminalExpression exp = getNonTerminal(charArr, i);
-                if (exp == null){
-                    TerminalExpression term = getTerminalExpression(charArr, i);
-                    ExpressionsList.AddLast(term);
-                    i = term.EndIndexAtRaw;
-                    continue;
-                }
-                ExpressionsList.AddLast(exp);
-                i = exp.EndIndexAtRaw;
-            }
+            this.ExpressionsList = _parser.ParsePattern(_pattern);
         }
 
-        /// <summary>
-        /// If it is a start of NonTerminal expression this method will return the
-        /// NonTerminal Expression.
-        /// </summary>
-        /// <returns>The non terminal.</returns>
-        /// <param name="arr">Arr.</param>
-        /// <param name="startPosition">Start position.</param>
-        private NonTerminalExpression getNonTerminal(char[] arr, int startPosition){
-            NonTerminalExpression result = null;
-
-            switch(arr[startPosition]){
-                case '&':
-                    result = new ANDExpression()
-                    {
-                        StartIndexAtRaw = startPosition,
-                        EndIndexAtRaw = startPosition
-                    };
-                    break;
-
-                case '|':
-                    result = new ORExpression()
-                    {
-                        StartIndexAtRaw = startPosition,
-                        EndIndexAtRaw = startPosition
-                    };
-                    break;
-
-                case '~':
-                    result = new NOTExpression()
-                    {
-                        StartIndexAtRaw = startPosition,
-                        EndIndexAtRaw = startPosition
-                    };
-                    break;
-
-                case '/':
-                    int distanseCharLength = 0;
-                    while(char.IsDigit(arr[startPosition + distanseCharLength + 1])){
-                        distanseCharLength++;
-                    }
-
-                    if (distanseCharLength == 0)
-                        throw new FormatException("/n non-terminal format error - no n after /");
-
-                    result = new MaxDistExpression(int.Parse(new string(arr.Skip(startPosition + 1).Take(distanseCharLength).ToArray())))
-                    {
-                        StartIndexAtRaw = startPosition,
-                        EndIndexAtRaw = startPosition + distanseCharLength
-                    };
-                    break;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Create terminal expression starting from startIndex.
-        /// </summary>
-        /// <returns>The terminal expression.</returns>
-        /// <param name="charArr">Char arr.</param>
-        /// <param name="startIndex">Start index.</param>
-        private TerminalExpression getTerminalExpression(char[] charArr, int startIndex){
-            TerminalExpression term = null;
-            int closingQuotesIndex = 0;
-            if(charArr[startIndex] == '"'){
-                closingQuotesIndex = charArr
-                    .Skip(startIndex + 1)
-                    .Select((x, y) => new { ch = x, index = y })
-                    .First(x => x.ch == '"')
-                    .index + 1 + startIndex;
-
-                term = new TerminalExpression(
-                    "\"" + new string(charArr.Skip(startIndex + 1).Take(closingQuotesIndex - startIndex - 1).ToArray()) + "\"")
-                {
-                    StartIndexAtRaw = startIndex,
-                    EndIndexAtRaw = closingQuotesIndex,
-                    InQuotes = true
-                };
-            }
-            else{
-                int i = startIndex;
-                while(true){
-                    if (charArr.Length == i || charArr[i] == ' ' || charArr[i] == ')' || charArr[i] == '(' || charArr[i] == '|' || charArr[i] == '*' || charArr[i] == '&' || charArr[i] == '~' || charArr[i] == '/'){
-                        term = new TerminalExpression(new string(charArr.Skip(startIndex).Take(i - startIndex).ToArray()))
-                        {
-                            StartIndexAtRaw = startIndex,
-                            EndIndexAtRaw = i-1,
-                            InQuotes = false
-                        };
-                        break;
-                    }
-                    i++;
-                }
-            }
-
-            return term;
-        }
+        
 
         /// <summary>
         /// Modifies to inverses polish notaion and makes tree.
@@ -382,7 +232,39 @@ namespace SamplesToTextsMatcher
             if (_dict == null || !_shouldWorkWithTermsForms)
                 return;
 
+            for (LinkedListNode<Expression> it = ExpressionsList.First; it != null;)
+            {
+                if (it.Value is TerminalExpression)
+                {
+                    if (!((TerminalExpression)it.Value).HasAsterixSign || ((TerminalExpression)it.Value).NeedsExactForm)
+                        continue;
 
+                    var forms = _dict.GetSyns(it.Value.Raw, _tokenFormsMaxNumberForAsterix);
+                    if (forms.Count > 1)
+                    {
+                        var brackOpen = ExpressionsList.AddBefore(it, new OpeningBracket());
+                        LinkedListNode<Expression> lastForm = null;
+                        foreach (var form in forms)
+                        {
+                            if (it.Value.Raw == form)
+                                continue;
+
+                            ORExpression or = new ORExpression();
+                            TerminalExpression t = new TerminalExpression(form);
+
+                            var o = ExpressionsList.AddAfter(lastForm, or);
+                            var te = ExpressionsList.AddAfter(o, t);
+
+                            lastForm = te;
+                        }
+                        var brackClose = ExpressionsList.AddAfter(lastForm, new ClosingBracket());
+                    }
+                }
+
+                LinkedListNode<Expression> next = it.Next;
+                if (next == null)
+                    break;
+            }
         }
 
         /// <summary>
@@ -397,7 +279,36 @@ namespace SamplesToTextsMatcher
 
             for (LinkedListNode<Expression> it = ExpressionsList.First; it != null;)
             {
+                if(it.Value is TerminalExpression)
+                {
+                    if (((TerminalExpression)it.Value).HasAsterixSign || ((TerminalExpression)it.Value).NeedsExactForm)
+                        continue;
 
+                    var forms = _dict.GetSyns(it.Value.Raw);
+                    if(forms.Count > 1)
+                    {
+                        var brackOpen = ExpressionsList.AddBefore(it, new OpeningBracket());
+                        LinkedListNode<Expression> lastForm = null;
+                        foreach (var form in forms)
+                        {
+                            if (it.Value.Raw == form)
+                                continue;
+
+                            ORExpression or = new ORExpression();
+                            TerminalExpression t = new TerminalExpression(form);
+
+                            var o = ExpressionsList.AddAfter(lastForm, or);
+                            var te = ExpressionsList.AddAfter(o, t);
+
+                            lastForm = te;
+                        }
+                        var brackClose = ExpressionsList.AddAfter(lastForm, new ClosingBracket());
+                    }
+                }
+                
+                LinkedListNode<Expression> next = it.Next;
+                if (next == null)
+                    break;
             }
         }
 

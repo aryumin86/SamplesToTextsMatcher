@@ -7,13 +7,15 @@ namespace SamplesToTextsMatcherTests
 {
     public class ParserTests
     {
+        AbstractPatternParser parser = new ConcretePatternParser();
+
         /// <summary>
         /// =a
         /// </summary>
         [Fact]
         public void EqualSignWoksForSimpleTerm(){
             string pattern = "=корелла";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             Assert.True(((TerminalExpression)context.Root).NeedsExactForm);
         }
 
@@ -24,7 +26,7 @@ namespace SamplesToTextsMatcherTests
         public void EqualSignWoksForSimpleTermInQuotes()
         {
             string pattern = "=\"корелла\"";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             Assert.True(((TerminalExpression)context.Root).NeedsExactForm);
         }
 
@@ -35,7 +37,7 @@ namespace SamplesToTextsMatcherTests
         public void EqualSignWoksForSeveralTermsInQuotes()
         {
             string pattern = "=\"синяя корелла\"";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             Assert.True(((TerminalExpression)context.Root).NeedsExactForm);
         }
 

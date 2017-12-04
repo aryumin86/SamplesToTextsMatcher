@@ -6,13 +6,15 @@ namespace SamplesToTextsMatcherTests
 {
     public class MatcherTests
     {
+        AbstractPatternParser parser = new ConcretePatternParser();
+
         /// <summary>
         /// a
         /// </summary>
         [Fact]
         public void SingleWordPatternMatchesCorrectly(){
             string pattern = "корелла";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             bool res = context.MatchPatternToString(new string[]{
                     "корелла"
             });
@@ -27,7 +29,7 @@ namespace SamplesToTextsMatcherTests
         public void SimpleANDExpressionPatternMatchesCorrectly()
         {
             string pattern = "корелла & арбуз";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             bool res = context.MatchPatternToString(new string[]{
                 "корелла",
                 "бегемот",
@@ -44,7 +46,7 @@ namespace SamplesToTextsMatcherTests
         public void SimpleORExpressionPatternMatchesCorrectly()
         {
             string pattern = "корелла | арбуз";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             bool res = context.MatchPatternToString(new string[]{
                 "корелла",
                 "бегемот"
@@ -67,7 +69,7 @@ namespace SamplesToTextsMatcherTests
         public void SimpleNOTExpressionPatternMatchesCorrectly()
         {
             string pattern = "корелла ~арбуз";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             bool res = context.MatchPatternToString(new string[]{
                 "корелла",
                 "арбуз",
@@ -84,7 +86,7 @@ namespace SamplesToTextsMatcherTests
         public void SimpleMaxDistExpressionPatternMatchesCorrectly()
         {
             string pattern = "корелла /3 арбуз";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             bool res = context.MatchPatternToString(new string[]{
                 "корелла",
                 "выдра",
@@ -103,7 +105,7 @@ namespace SamplesToTextsMatcherTests
         public void TwoOrInBracketsAsAndExpressionPatternMatchesCorrectly()
         {
             string pattern = "(корелла | какаду) & (арбуз | ананас)";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             bool res = context.MatchPatternToString(new string[]{
                 "корелла",
                 "выдра",
@@ -122,7 +124,7 @@ namespace SamplesToTextsMatcherTests
         public void TwoOrInBracketsAsMaxDistExpressionPatternMatchesCorrectly()
         {
             string pattern = "(корелла | какаду) /3 (арбуз | ананас)";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             bool res = context.MatchPatternToString(new string[]{
                 "корелла",
                 "выдра",
@@ -141,7 +143,7 @@ namespace SamplesToTextsMatcherTests
         public void TwoInQuotesTerminalsAsMaxDistExpressionPatternMatchesCorrectly()
         {
             string pattern = "\"синяя корелла\" /3 \"зеленая какаду\"";
-            Context context = new Context(pattern, null);
+            Context context = new Context(pattern, parser, null);
             bool res = context.MatchPatternToString(new string[]{
                 "\"синяя корелла\"",
                 "выдра",
