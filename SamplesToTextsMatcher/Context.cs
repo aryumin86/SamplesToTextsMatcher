@@ -237,33 +237,36 @@ namespace SamplesToTextsMatcher
                 if (it.Value is TerminalExpression)
                 {
                     if (!((TerminalExpression)it.Value).HasAsterixSign || ((TerminalExpression)it.Value).NeedsExactForm)
+                    {
+                        LinkedListNode<Expression> ne = it.Next;
+                        if (ne == null)
+                            break;
+                        it = ne;
                         continue;
+                    }  
 
                     var forms = _dict.GetSyns(it.Value.Raw, _tokenFormsMaxNumberForAsterix);
                     if (forms.Count > 1)
                     {
                         var brackOpen = ExpressionsList.AddBefore(it, new OpeningBracket());
-                        LinkedListNode<Expression> lastForm = null;
                         foreach (var form in forms)
                         {
-                            if (it.Value.Raw == form)
-                                continue;
-
                             ORExpression or = new ORExpression();
                             TerminalExpression t = new TerminalExpression(form);
 
-                            var o = ExpressionsList.AddAfter(lastForm, or);
+                            var o = ExpressionsList.AddAfter(it, or);
                             var te = ExpressionsList.AddAfter(o, t);
 
-                            lastForm = te;
+                            it = te;
                         }
-                        var brackClose = ExpressionsList.AddAfter(lastForm, new ClosingBracket());
+                        var brackClose = ExpressionsList.AddAfter(it, new ClosingBracket());
                     }
                 }
 
                 LinkedListNode<Expression> next = it.Next;
                 if (next == null)
                     break;
+                it = next;
             }
         }
 
@@ -282,33 +285,37 @@ namespace SamplesToTextsMatcher
                 if(it.Value is TerminalExpression)
                 {
                     if (((TerminalExpression)it.Value).HasAsterixSign || ((TerminalExpression)it.Value).NeedsExactForm)
+                    {
+                        LinkedListNode<Expression> ne = it.Next;
+                        if (ne == null)
+                            break;
+                        it = ne;
                         continue;
+                    }
 
                     var forms = _dict.GetSyns(it.Value.Raw);
                     if(forms.Count > 1)
                     {
                         var brackOpen = ExpressionsList.AddBefore(it, new OpeningBracket());
-                        LinkedListNode<Expression> lastForm = null;
+                        
                         foreach (var form in forms)
                         {
-                            if (it.Value.Raw == form)
-                                continue;
-
                             ORExpression or = new ORExpression();
                             TerminalExpression t = new TerminalExpression(form);
 
-                            var o = ExpressionsList.AddAfter(lastForm, or);
+                            var o = ExpressionsList.AddAfter(it, or);
                             var te = ExpressionsList.AddAfter(o, t);
 
-                            lastForm = te;
+                            it = te;
                         }
-                        var brackClose = ExpressionsList.AddAfter(lastForm, new ClosingBracket());
+                        var brackClose = ExpressionsList.AddAfter(it, new ClosingBracket());
                     }
                 }
                 
                 LinkedListNode<Expression> next = it.Next;
                 if (next == null)
                     break;
+                it = next;
             }
         }
 

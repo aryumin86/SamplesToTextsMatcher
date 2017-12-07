@@ -1,5 +1,6 @@
 ﻿using System;
 using SamplesToTextsMatcher;
+using System.Data.SqlClient;
 
 namespace Examples
 {
@@ -12,7 +13,8 @@ namespace Examples
             //string pattern = "((свин | корелл*) /2 (=корова | \"оранжевый бобер\")) ~какаду";
             string pattern = "\"мокрая корелла\" & волнистый | (корабли /4 (рыбки | рыбок | рыбками | водоросли))";
 
-            Context context = new Context(pattern, new ConcretePatternParser(), null);
+            var dict = new ConcreteMorfDictionary();
+            Context context = new Context(pattern, new ConcretePatternParser(), dict);
 
 
             bool match7 = context.MatchPatternToString(new string[]{

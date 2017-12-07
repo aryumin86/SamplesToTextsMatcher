@@ -26,7 +26,10 @@ namespace MorfDictionaryPopulator
             string conn = Configuration["main_conn"];
             string tableName = Configuration["morf_table"];
 
-            WriteRusDictToDb(fileName, conn, tableName);
+            Console.WriteLine("Type YES to populate dict");
+            string confirm = Console.ReadLine();
+            if(confirm == "YES")
+                WriteRusDictToDb(fileName, conn, tableName);
 
             Console.WriteLine("Done...");
             Console.ReadLine();
