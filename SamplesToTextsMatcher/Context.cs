@@ -18,9 +18,14 @@ namespace SamplesToTextsMatcher
         public int Id { get; set; }
 
         /// <summary>
+        /// Impotance of context.
+        /// </summary>
+        public int Priority { get; set; }
+
+        /// <summary>
         /// This context is a part of contexts groups with this Id.
         /// </summary>
-        public int GroupId { get; set; }
+        public int ProjectId { get; set; }
 
         private string _pattern;
         private AbstractMorfDictionary _dict;
@@ -52,6 +57,21 @@ namespace SamplesToTextsMatcher
         public Expression Root { get; set; }
 
         private bool _shouldWorkWithTermsForms;
+
+        /// <summary>
+        /// Constructor for creating context using string previously processed,
+        /// with terms forms, brackets, etc.
+        /// </summary>
+        /// <param name="rootExpression"></param>
+        public Context(string pattern, AbstractPatternParser parser)
+        {
+            this._parser = parser;
+            this._pattern = pattern;
+            InversedPolishQueue = new Queue<Expression>();
+            createExpressionsList();
+            ModifyToInversePolish();
+            CreateTreeFromQueue();
+        }
 
         /// <summary>
         /// Main constructor.
