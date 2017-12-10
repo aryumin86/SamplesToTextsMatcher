@@ -35,5 +35,6 @@ namespace SamplesToTextsMatcher
 
         public abstract List<string> GetSyns(string word, int max = Int32.MaxValue);
         public abstract string[,] GetSyns(string[] words, int max = int.MaxValue);
+        public abstract List<string> ResolveAsterix(string word, int max = Int32.MaxValue);
     }
 }

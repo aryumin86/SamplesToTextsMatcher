@@ -24,5 +24,11 @@ namespace SamplesToTextsMatcher.Entities
         /// This is a normal form of word.
         /// </summary>
         public bool IsNormalForm { get; set; }
+
+        public int JointType { get; set; }
+
+        public int JointFrom { get; set; }
+
+        public int JointTo { get; set; }
     }
 }

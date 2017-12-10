@@ -68,9 +68,17 @@ namespace SamplesToTextsMatcher
             this._parser = parser;
             this._pattern = pattern;
             InversedPolishQueue = new Queue<Expression>();
-            createExpressionsList();
-            ModifyToInversePolish();
-            CreateTreeFromQueue();
+
+            try
+            {
+                createExpressionsList();
+                ModifyToInversePolish();
+                CreateTreeFromQueue();
+            }
+            catch(Exception ex)
+            {
+                throw new FormatException("Error with pattern parsing");
+            }
         }
 
         /// <summary>
@@ -89,14 +97,22 @@ namespace SamplesToTextsMatcher
             this._shouldWorkWithTermsForms = shouldWorkWithTermsForms;
             InversedPolishQueue = new Queue<Expression>();
 
-            queryTextFirstFormat();
-            validateInput();
-            createExpressionsList();
-            ResolveAllEqualsSigns();
-            getWordsFormsForTokens();
-            resolveQueryAsterixOperators();
-            ModifyToInversePolish();
-            CreateTreeFromQueue();
+            try
+            {
+                queryTextFirstFormat();
+                validateInput();
+                createExpressionsList();
+                ResolveAllEqualsSigns();
+                getWordsFormsForTokens();
+                resolveQueryAsterixOperators();
+                ModifyToInversePolish();
+                CreateTreeFromQueue();
+                FormResStringExpression();
+            }
+            catch(Exception ex)
+            {
+                throw new FormatException("Error with pattern parsing");
+            }
         }
 
         /// <summary>
@@ -179,9 +195,6 @@ namespace SamplesToTextsMatcher
             var arr = ExpressionsList.ToArray();
             for (int i = 0; i < arr.Length; i++){
 
-                //delete this!!!!
-                var elem = arr[i];
-
                 if(arr[i] is TerminalExpression){
                     InversedPolishQueue.Enqueue(arr[i]);
                 }
@@ -201,7 +214,7 @@ namespace SamplesToTextsMatcher
                 }
                 else if(arr[i] is NonTerminalExpression){
                     
-                    while (stack.Any() && ((NonTerminalExpression)stack.Peek()).Priority >= ((NonTerminalExpression)arr[i]).Priority)
+                    while (stack.Any() && ((NonTerminalExpression)stack.Peek()).Priority > ((NonTerminalExpression)arr[i]).Priority)
                     {
                         InversedPolishQueue.Enqueue(stack.Pop());
                     }
@@ -320,6 +333,9 @@ namespace SamplesToTextsMatcher
                         
                         foreach (var form in forms)
                         {
+                            if (form == it.Value.Raw)
+                                continue;
+
                             ORExpression or = new ORExpression();
                             TerminalExpression t = new TerminalExpression(form);
 
@@ -329,6 +345,7 @@ namespace SamplesToTextsMatcher
                             it = te;
                         }
                         var brackClose = ExpressionsList.AddAfter(it, new ClosingBracket());
+                        it = brackClose;
                     }
                 }
                 

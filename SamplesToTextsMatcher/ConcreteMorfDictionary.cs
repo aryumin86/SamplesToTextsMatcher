@@ -13,7 +13,7 @@ namespace SamplesToTextsMatcher
 
             using (var cn = new SqlConnection(_conn))
             using(SqlCommand cmd = new SqlCommand("select Raw from "+ _table + 
-                " where NormalFormId = (select NormalFormId from " + _table + " where Raw = '" + word.ToLower() + "')", cn))
+                " where NormalFormId = (select top 1 NormalFormId from " + _table + " where Raw = '" + word.ToLower() + "')", cn))
             {
                 cn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -37,6 +37,11 @@ namespace SamplesToTextsMatcher
 
 
         public override string[,] GetSyns(string[] words, int max = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override List<string> ResolveAsterix(string word, int max = int.MaxValue)
         {
             throw new NotImplementedException();
         }

@@ -87,8 +87,35 @@ namespace MorfDictionaryPopulator
                         count = 0;
                     }
                 }
+
+                writeWordsToDb(part, conn, tableName);
+                        part.Clear();
+                        count = 0;
             }
 
+            //Console.WriteLine("started joining simalar forms with one normal form id...");
+
+            //joining similar words forms with same normal form id
+            //using (var fileStream = File.OpenRead(fileName))
+            //using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize))
+            //{
+            //    String line;
+            //    List<KeyValuePair<int, int>> joints = new List<KeyValuePair<int, int>>();
+
+            //    while ((line = streamReader.ReadLine()) != null)
+            //    {
+            //        if (!line.Trim().StartsWith("<link id"))
+            //            continue;
+
+            //        XElement elem = XElement.Parse(line);
+            //        int from = int.Parse((string)elem.Attribute("from").Value);
+            //        int to = int.Parse((string)elem.Attribute("to").Value);
+
+            //        joints.Add(new KeyValuePair<int, int>(from, to));
+            //    }
+                
+            //    SetSameNormalFormIdForSimalarWordsForms(conn, tableName, joints);
+            //}
         }
 
 
@@ -117,6 +144,34 @@ namespace MorfDictionaryPopulator
                 }
 
                 Console.WriteLine(DateTime.Now + " Written to db " + words.Count + " words...");
+                connection.Close();
+            }
+        }
+
+        static void SetSameNormalFormIdForSimalarWordsForms(string conn, string tabName, List<int[]> joints)
+        {
+            //sql is incorrect. need another table for joints
+            string sql = string.Format("update {0} set NormalFormId = @from where Id in " +
+                "(select Id from {0} where NormalFormId = @to)", tabName);
+
+            using (SqlConnection connection = new SqlConnection(conn))
+            using (SqlCommand cmd = new SqlCommand(sql, connection))
+            {
+                cmd.Parameters.Add("@from", SqlDbType.Int);
+                cmd.Parameters.Add("@to", SqlDbType.Int);
+                cmd.Parameters.Add("@type", SqlDbType.Int);
+
+                connection.Open();
+
+                foreach(var j in joints)
+                {
+                    cmd.Parameters["@from"].Value = j[0];
+                    cmd.Parameters["@to"].Value = j[1];
+                    cmd.Parameters["@type"].Value = j[2];
+
+                    cmd.ExecuteNonQuery();
+                }
+
                 connection.Close();
             }
         }
