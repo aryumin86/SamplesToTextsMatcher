@@ -276,14 +276,18 @@ namespace SamplesToTextsMatcher
                             break;
                         it = ne;
                         continue;
-                    }  
+                    }
 
-                    var forms = _dict.GetSyns(it.Value.Raw, _tokenFormsMaxNumberForAsterix);
+                    var forms = _dict.ResolveAsterix(it.Value.Raw, _tokenFormsMaxNumberForAsterix);
                     if (forms.Count > 1)
                     {
                         var brackOpen = ExpressionsList.AddBefore(it, new OpeningBracket());
+
                         foreach (var form in forms)
                         {
+                            if (form == it.Value.Raw)
+                                continue;
+
                             ORExpression or = new ORExpression();
                             TerminalExpression t = new TerminalExpression(form);
 
@@ -293,6 +297,7 @@ namespace SamplesToTextsMatcher
                             it = te;
                         }
                         var brackClose = ExpressionsList.AddAfter(it, new ClosingBracket());
+                        it = brackClose;
                     }
                 }
 

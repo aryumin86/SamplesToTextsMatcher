@@ -52,7 +52,11 @@ namespace SamplesToTextsMatcher
                     if (ExpressionsList.Last() == null || ExpressionsList.Last().GetType() != typeof(TerminalExpression))
                         throw new FormatException("Asterix should be only at the end of term");
                     else
+                    {
                         ((TerminalExpression)ExpressionsList.Last()).HasAsterixSign = true;
+                        ((TerminalExpression)ExpressionsList.Last()).Raw += "*";
+                    }
+                        
 
                     continue;
                 }

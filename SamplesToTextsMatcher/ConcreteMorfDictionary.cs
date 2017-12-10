@@ -43,7 +43,30 @@ namespace SamplesToTextsMatcher
 
         public override List<string> ResolveAsterix(string word, int max = int.MaxValue)
         {
-            throw new NotImplementedException();
+            HashSet<string> res = new HashSet<string>();
+
+            using (var cn = new SqlConnection(_conn))
+            using (SqlCommand cmd = new SqlCommand("select Raw from " + _table +
+                " where Raw like '" + word.ToLower().Replace("*","%") + "'", cn))
+            {
+                cn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        res.Add(reader.GetString(0));
+                    }
+                }
+                else
+                {
+                    res.Add(word);
+                }
+
+                reader.Close();
+            }
+
+            return new List<string>(res);
         }
     }
 }
