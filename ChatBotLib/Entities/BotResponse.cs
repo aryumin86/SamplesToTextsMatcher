@@ -9,5 +9,14 @@ namespace ChatBotLib.Entities
     /// </summary>
     public class BotResponse
     {
+        public int Priority { get; set; }
+
+        public string ResponseText { get; set; }
+
+        public BotResponse(string responseText)
+        {
+            Priority = 1;
+            this.ResponseText = responseText;
+        }
     }
 }

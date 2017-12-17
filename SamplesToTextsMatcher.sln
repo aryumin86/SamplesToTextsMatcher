@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SamplesToTextsMatcher", "SamplesToTextsMatcher\SamplesToTextsMatcher.csproj", "{4AD1A6E3-AC54-49D6-8A9C-ADC3FB2D6851}"
 EndProject
@@ -8,15 +8,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "Examples\Exampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SamplesToTextsMatcherTests", "SamplesToTextsMatcherTests\SamplesToTextsMatcherTests.csproj", "{8D8AB35A-2BE1-4313-82EA-755B0052B2D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorfDictionaryPopulator", "MorfDictionaryPopulator\MorfDictionaryPopulator.csproj", "{1C984AFE-D982-4F2F-BC22-D8CC8DEE91D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MorfDictionaryPopulator", "MorfDictionaryPopulator\MorfDictionaryPopulator.csproj", "{1C984AFE-D982-4F2F-BC22-D8CC8DEE91D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBotLib", "ChatBotLib\ChatBotLib.csproj", "{B678A946-D5A3-42FE-9E3B-323E6D400622}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatBotLib", "ChatBotLib\ChatBotLib.csproj", "{B678A946-D5A3-42FE-9E3B-323E6D400622}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebArm", "WebArm\WebArm.csproj", "{8666DEBF-2ADF-44C8-97E9-BFCEA1C66EBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebArm.Tests", "WebArm.Tests\WebArm.Tests.csproj", "{7EE1FFC0-7664-41A1-9A2E-CAA10840D7F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopMatcherDemo", "DesktopMatcherDemo\DesktopMatcherDemo.csproj", "{DE8FC9C8-6FA3-40A1-A838-0E69F3D8ABD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBotLibTests", "ChatBotLibTests\ChatBotLibTests.csproj", "{CAFA0AB8-EDEA-4F43-B314-C6A0A4CD396B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{DE8FC9C8-6FA3-40A1-A838-0E69F3D8ABD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE8FC9C8-6FA3-40A1-A838-0E69F3D8ABD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE8FC9C8-6FA3-40A1-A838-0E69F3D8ABD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAFA0AB8-EDEA-4F43-B314-C6A0A4CD396B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAFA0AB8-EDEA-4F43-B314-C6A0A4CD396B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAFA0AB8-EDEA-4F43-B314-C6A0A4CD396B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAFA0AB8-EDEA-4F43-B314-C6A0A4CD396B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
