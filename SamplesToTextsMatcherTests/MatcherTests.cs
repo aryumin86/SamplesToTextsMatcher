@@ -154,5 +154,12 @@ namespace SamplesToTextsMatcherTests
 
             Assert.True(res);
         }
+
+        /// <summary>
+        /// Adding another list of expression into main linked list of expressions.
+        /// </summary>
+        public void UpdateExpressionsListWithExtraExpressionsLists_ReaalyAddsAnotherListOfExactFormsTerms(){
+            Assert.True(false);
+        }
     }
 }

@@ -58,6 +58,8 @@ namespace SamplesToTextsMatcher
 
         private bool _shouldWorkWithTermsForms;
 
+        List<Tuple<Expression, LinkedList<Expression>>> extras;
+
         /// <summary>
         /// Constructor for creating context using string previously processed,
         /// with terms forms, brackets, etc.
@@ -89,12 +91,14 @@ namespace SamplesToTextsMatcher
         /// <param name="shouldWorkWithTermsForms">for example if pattern is from db 
         /// - all forms are already in pattern and no need for them</param>
         public Context(string pattern, AbstractPatternParser parser, AbstractMorfDictionary dict, bool shouldWorkWithTermsForms = true, 
-            int _tokenFormsMaxNumberForAsterix = 30)
+                       int _tokenFormsMaxNumberForAsterix = 30,  List<Tuple<Expression, LinkedList<Expression>>> extras = null)
         {
             this._pattern = pattern;
             this._dict = dict;
             this._parser = parser;
             this._shouldWorkWithTermsForms = shouldWorkWithTermsForms;
+            if (extras != null)
+                this.extras = new List<Tuple<Expression, LinkedList<Expression>>>();
             InversedPolishQueue = new Queue<Expression>();
 
             try
@@ -102,6 +106,7 @@ namespace SamplesToTextsMatcher
                 queryTextFirstFormat();
                 validateInput();
                 createExpressionsList();
+                UpdateExpressionsListWithExtraExpressionsLists();
                 ResolveAllEqualsSigns();
                 getWordsFormsForTokens();
                 resolveQueryAsterixOperators();
@@ -391,6 +396,40 @@ namespace SamplesToTextsMatcher
         private void FormResStringExpression()
         {
             this.MatchPatternToString(new string[] { "а" });
+        }
+
+        /// <summary>
+        /// Updates the raw expressions list with extra expressions lists - replaces 
+        /// raw expression with list of expressions. e.g if there are many contexts 
+        /// which use all the same part (Person sinonyms or company) - this part could be
+        /// the own context and used in other contexts - its linked list of expressions 
+        /// could be inserted into other lined lists of expressions.
+        /// </summary>
+        private void UpdateExpressionsListWithExtraExpressionsLists(){
+            if (this.extras == null)
+                return;
+            
+            foreach(var extra in this.extras){
+                OpeningBracket o = new OpeningBracket();
+                ClosingBracket c = new ClosingBracket();
+
+                var expInRaw = ExpressionsList.Find(extra.Item1);
+
+                ExpressionsList.AddBefore(expInRaw, o);
+                ExpressionsList.AddAfter(expInRaw, c);
+
+                foreach(var term in extra.Item2){
+                    if(term is TerminalExpression){
+                        (term as TerminalExpression).NeedsExactForm = true;
+                    }
+                }
+
+                //Replacing expression with another linked list of expressions
+                expInRaw = extra.Item2.First;
+                var last = extra.Item2.Last.Value;
+                extra.Item2.Last.Next.Value = c;
+                extra.Item2.Find(c).Previous.Value = last;
+            }
         }
     }
 }
