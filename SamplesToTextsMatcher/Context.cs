@@ -452,10 +452,5 @@ namespace SamplesToTextsMatcher
                 }
             }
         }
-
-
-        private LinkedList<Expression> ReplaceNodeWithNodesList(){
-            return null;
-        }
     }
 }
