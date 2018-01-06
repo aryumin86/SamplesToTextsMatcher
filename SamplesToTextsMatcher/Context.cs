@@ -450,26 +450,6 @@ namespace SamplesToTextsMatcher
                         te = te.Next;
                     }
                 }
-
-                //foreach(var exp in expsInRaw){
-                //    OpeningBracket o = new OpeningBracket();
-                //    ClosingBracket c = new ClosingBracket();
-                //
-                //    var expNode = ExpressionsList.Find(exp);
-                //    ExpressionsList.AddBefore(expNode, o);
-                //    ExpressionsList.AddAfter(expNode, c);
-                //
-                //    //Replacing expression with another linked list of expressions
-                //    ExpressionsList.Remove(expNode);
-                //    //Inserting expressions from extra one after another into result linkedlist
-                //    LinkedListNode<Expression> temp = ExpressionsList.Find(o);
-                //    var te = extra.Value.First;
-                //    while(te != null){
-                //        var n = ExpressionsList.AddAfter(temp, te.Value);
-                //        te = te.Next;
-                //    }
-                //}
-
             }
         }
 
