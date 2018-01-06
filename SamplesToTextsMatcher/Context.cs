@@ -18,6 +18,12 @@ namespace SamplesToTextsMatcher
         public int Id { get; set; }
 
         /// <summary>
+        /// Title of context.
+        /// </summary>
+        /// <value>The title.</value>
+        public string Title { get; set; }
+
+        /// <summary>
         /// Impotance of context.
         /// </summary>
         public int Priority { get; set; }
@@ -58,13 +64,15 @@ namespace SamplesToTextsMatcher
 
         private bool _shouldWorkWithTermsForms;
 
-        List<Tuple<Expression, LinkedList<Expression>>> extras;
+        /// <summary>
+        /// Linked lists to replace terms in raw linked list.
+        /// </summary>
+        Dictionary<string, LinkedList<Expression>> extras;
 
         /// <summary>
         /// Constructor for creating context using string previously processed,
         /// with terms forms, brackets, etc.
         /// </summary>
-        /// <param name="rootExpression"></param>
         public Context(string pattern, AbstractPatternParser parser)
         {
             this._parser = parser;
@@ -91,14 +99,14 @@ namespace SamplesToTextsMatcher
         /// <param name="shouldWorkWithTermsForms">for example if pattern is from db 
         /// - all forms are already in pattern and no need for them</param>
         public Context(string pattern, AbstractPatternParser parser, AbstractMorfDictionary dict, bool shouldWorkWithTermsForms = true, 
-                       int _tokenFormsMaxNumberForAsterix = 30,  List<Tuple<Expression, LinkedList<Expression>>> extras = null)
+                       int _tokenFormsMaxNumberForAsterix = 30,  Dictionary<string, LinkedList<Expression>> extras = null)
         {
             this._pattern = pattern;
             this._dict = dict;
             this._parser = parser;
             this._shouldWorkWithTermsForms = shouldWorkWithTermsForms;
             if (extras != null)
-                this.extras = new List<Tuple<Expression, LinkedList<Expression>>>();
+                this.extras = extras;
             InversedPolishQueue = new Queue<Expression>();
 
             try
@@ -410,26 +418,64 @@ namespace SamplesToTextsMatcher
                 return;
             
             foreach(var extra in this.extras){
-                OpeningBracket o = new OpeningBracket();
-                ClosingBracket c = new ClosingBracket();
+                //all the expressions with raw like {{the_term}}
 
-                var expInRaw = ExpressionsList.Find(extra.Item1);
 
-                ExpressionsList.AddBefore(expInRaw, o);
-                ExpressionsList.AddAfter(expInRaw, c);
+                foreach (var term in extra.Value.Where(t => t is TerminalExpression))
+                {
+                    (term as TerminalExpression).NeedsExactForm = true;
+                }
 
-                foreach(var term in extra.Item2){
-                    if(term is TerminalExpression){
-                        (term as TerminalExpression).NeedsExactForm = true;
+                //taking nodes one by one while there are any {terms} in main linked list
+                while(true){
+                    var expInRaw = ExpressionsList.Where(e => e.Raw == extra.Key).FirstOrDefault();
+                    if (expInRaw == null)
+                        break;
+
+                    OpeningBracket o = new OpeningBracket();
+                    ClosingBracket c = new ClosingBracket();
+
+                    var expNode = ExpressionsList.Find(expInRaw);
+                    ExpressionsList.AddBefore(expNode, o);
+                    ExpressionsList.AddAfter(expNode, c);
+
+                    //Replacing expression with another linked list of expressions
+                    ExpressionsList.Remove(expNode);
+                    //Inserting expressions from extra one after another into result linkedlist
+                    LinkedListNode<Expression> temp = ExpressionsList.Find(o);
+                    var te = extra.Value.First;
+                    while (te != null)
+                    {
+                        var n = ExpressionsList.AddAfter(temp, te.Value);
+                        te = te.Next;
                     }
                 }
 
-                //Replacing expression with another linked list of expressions
-                expInRaw = extra.Item2.First;
-                var last = extra.Item2.Last.Value;
-                extra.Item2.Last.Next.Value = c;
-                extra.Item2.Find(c).Previous.Value = last;
+                //foreach(var exp in expsInRaw){
+                //    OpeningBracket o = new OpeningBracket();
+                //    ClosingBracket c = new ClosingBracket();
+                //
+                //    var expNode = ExpressionsList.Find(exp);
+                //    ExpressionsList.AddBefore(expNode, o);
+                //    ExpressionsList.AddAfter(expNode, c);
+                //
+                //    //Replacing expression with another linked list of expressions
+                //    ExpressionsList.Remove(expNode);
+                //    //Inserting expressions from extra one after another into result linkedlist
+                //    LinkedListNode<Expression> temp = ExpressionsList.Find(o);
+                //    var te = extra.Value.First;
+                //    while(te != null){
+                //        var n = ExpressionsList.AddAfter(temp, te.Value);
+                //        te = te.Next;
+                //    }
+                //}
+
             }
+        }
+
+
+        private LinkedList<Expression> ReplaceNodeWithNodesList(){
+            return null;
         }
     }
 }

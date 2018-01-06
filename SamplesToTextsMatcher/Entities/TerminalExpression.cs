@@ -23,9 +23,17 @@ namespace SamplesToTextsMatcher.Entities
         /// <value><c>true</c> if in quotes; otherwise, <c>false</c>.</value>
         public bool InQuotes { get; set; }
 
-        public TerminalExpression(string term)
+        /// <summary>
+        /// This term should be replaced with another linked list of expressions.
+        /// If it should be replaced it has to have format like: {the_term}.
+        /// </summary>
+        /// <value><c>true</c> if should be replaced; otherwise, <c>false</c>.</value>
+        public bool ShouldBeReplaced { get; set; }
+
+        public TerminalExpression(string term, bool shouldBeReplaced = false)
         {
             Raw = term;
+            ShouldBeReplaced = shouldBeReplaced;
         }
 
         public override bool Interpret(Context context)

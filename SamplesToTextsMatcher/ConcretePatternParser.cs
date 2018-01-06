@@ -149,6 +149,7 @@ namespace SamplesToTextsMatcher
         {
             TerminalExpression term = null;
             int closingQuotesIndex = 0;
+            int closingCurlyBracketIndex = 0;
             if (charArr[startIndex] == '"')
             {
                 closingQuotesIndex = charArr
@@ -163,6 +164,21 @@ namespace SamplesToTextsMatcher
                     StartIndexAtRaw = startIndex,
                     EndIndexAtRaw = closingQuotesIndex,
                     InQuotes = true
+                };
+            }
+            else if(charArr[startIndex] == '{'){
+                closingCurlyBracketIndex = charArr
+                    .Skip(startIndex + 1)
+                    .Select((x, y) => new { ch = x, index = y })
+                    .First(x => x.ch == '}')
+                    .index + 1 + startIndex;
+
+                term = new TerminalExpression(
+                    "{" + new string(charArr.Skip(startIndex + 1).Take(closingCurlyBracketIndex - startIndex - 1).ToArray()) + "}")
+                {
+                    StartIndexAtRaw = startIndex,
+                    EndIndexAtRaw = closingCurlyBracketIndex,
+                    ShouldBeReplaced = true
                 };
             }
             else

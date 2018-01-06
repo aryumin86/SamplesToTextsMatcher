@@ -1,6 +1,9 @@
 ﻿using System;
 using SamplesToTextsMatcher;
 using Xunit;
+using System.Linq;
+using System.Collections.Generic;
+using SamplesToTextsMatcher.Entities;
 
 namespace SamplesToTextsMatcherTests
 {
@@ -158,8 +161,16 @@ namespace SamplesToTextsMatcherTests
         /// <summary>
         /// Adding another list of expression into main linked list of expressions.
         /// </summary>
+        [Fact]
         public void UpdateExpressionsListWithExtraExpressionsLists_ReaalyAddsAnotherListOfExactFormsTerms(){
-            Assert.True(false);
+            string pattern1 = "какаду | волнистный | корелла";
+            string pattern2 = "колесо | {птичка}";
+
+            Context ctx1 = new Context(pattern1, parser, null);
+            Dictionary<string, LinkedList<Expression>> extrasDict = new Dictionary<string, LinkedList<Expression>>();
+            extrasDict.Add("{птичка}", ctx1.ExpressionsList);
+            Context ctx2 = new Context(pattern2, parser, null, extras: extrasDict);
+            Assert.True(ctx2.ExpressionsList.Any(t => t.Raw.Contains("корелла")));
         }
     }
 }
