@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ru.aryumin.SamplesToTextMatcher.SamplesToTextMatcher</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Alexey Ryumin</authors>
+    <owners>Alexey Ryumin</owners>
+    <projectUrl>https://github.com/aryumin86/SamplesToTextsMatcher</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Matches a string wth a pattern</description>
+    <releaseNotes>First release</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>NLP textprocessing</tags>
+  </metadata>
+</package>
