@@ -418,9 +418,6 @@ namespace SamplesToTextsMatcher
                 return;
             
             foreach(var extra in this.extras){
-                //all the expressions with raw like {{the_term}}
-
-
                 foreach (var term in extra.Value.Where(t => t is TerminalExpression))
                 {
                     (term as TerminalExpression).NeedsExactForm = true;
